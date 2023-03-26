@@ -3,7 +3,7 @@
     <div class="page-header-logo">
       <img src="@/assets/logo.svg" />
     </div>
-    <div class="page-header-link">Orders online</div>
+    <div class="page-header-link">Счета и акты онлайн</div>
   </div>
 </template>
 
@@ -20,6 +20,7 @@ export default {
   max-height: 72px;
   justify-content: space-between;
   align-items: center;
+  font-size: 16px;
   &-logo {
     margin: 10px;
     height: 36px;
@@ -37,6 +38,7 @@ export default {
     text-decoration: dashed underline;
     cursor: pointer;
     align-items: center;
+    font-weight: 600;
   }
 }
 </style>

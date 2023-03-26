@@ -7,13 +7,18 @@
         Копируйте данные для договоров и делитесь карточкой с вашими партнерами
         в удобном формате.
       </p>
-      <p>DOCX PDF Ссылка Email</p>
+      <ul>
+        <li>DOCX</li>
+        <li>PDF</li>
+        <li>Ссылка</li>
+        <li>Email</li>
+      </ul>
       <p>
         Открытый доступ к карточке без интернета с мобильного телефона.
         Сохраните на мобильном HomeScreen.
       </p>
       <button class="action-button" @click="$emit('toggle')">
-        Generate card
+        Сгенерировать карточку
       </button>
     </div>
     <div class="card-intro-text">
@@ -35,18 +40,59 @@ export default {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  justify-content: space-between;
+  margin-top: 20px;
   &-text {
-    display: inline-block;
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 50%;
+    & > p {
+      margin-top: 10px;
+    }
     & > img {
       height: 246px;
       width: 400px;
+      & + p {
+        color: dodgerblue;
+      }
     }
   }
 }
 p {
   margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: 300;
+  color: #a9a9a9;
 }
 .action-button {
   cursor: pointer;
+}
+ul,
+li {
+  display: inline;
+  margin: 5px;
+  font-size: 16px;
+  font-weight: 300;
+  color: #a9a9a9;
+}
+h1 {
+  font-weight: 300;
+  font-size: 40px;
+}
+.action-button {
+  display: flex;
+  width: auto;
+  height: 32px;
+  padding: 18px;
+  font-weight: 600;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: dodgerblue;
+  justify-content: center;
+  align-items: center;
 }
 </style>

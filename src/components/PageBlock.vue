@@ -1,12 +1,15 @@
 <template>
   <div class="page-block">
     <Transition name="intro">
-      <CardIntro v-if="showIntro" @toggle="() => (this.showIntro = false)" />
+      <CardIntro
+        v-if="showIntro"
+        @toggle="() => (this.showGen = true) && (this.showIntro = false)"
+      />
     </Transition>
     <Transition name="generator">
       <CardGenerator
-        v-if="!showIntro"
-        @toggleback="() => (this.showIntro = true)"
+        v-if="showGen"
+        @toggleback="() => (this.showIntro = true) && (this.showGen = false)"
       />
     </Transition>
   </div>
@@ -22,6 +25,7 @@ export default {
   },
   data: () => ({
     showIntro: true,
+    showGen: false,
   }),
 };
 </script>
@@ -40,12 +44,14 @@ export default {
   transform: translateX(-100%);
 }
 .intro-enter-to {
+  opacity: 1;
   transform: translateX(0);
 }
 .intro-enter-active {
   transition: all 2s ease;
 }
 .generator-leave-from {
+  opacity: 1;
   transform: translateX(0);
 }
 .generator-leave-to {
@@ -59,10 +65,10 @@ export default {
 }
 .generator-enter-to {
   opacity: 1;
-  transform: translateX(0);
+  transform: translateX(50%);
 }
 .generator-enter-active {
-  transition: all 4s ease;
+  transition: all 6s ease;
 }
 .page-block {
   display: flex;
