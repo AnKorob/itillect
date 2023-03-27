@@ -5,7 +5,7 @@
       <input type="text" v-model="companyId" />
       <button class="action-button--find">Find</button>
     </div>
-    <p>Мы найдем реквизиты организациий и ИП в ЕГРЮЛ или ЕГРИП</p>
+    <p>Мы найдем реквизиты организациий и ИП в ЕГРЮЛ или ЕГРИП.</p>
     <p>В ИНН организации 10 цифр или 12 цифр для ИП.</p>
     <p>ИНН можно найти в свидетельстве о регистрации организации</p>
     <button class="action-button" @click="$emit('toggleback')">Обратно</button>
@@ -31,7 +31,6 @@ export default {
     max-width: 50%;
     margin-bottom: 46px;
     margin-top: 32px;
-    padding-left: 24px;
   }
 }
 .action-button {
