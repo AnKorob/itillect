@@ -1,16 +1,8 @@
 <template>
   <div class="page-block">
     <Transition name="intro">
-      <CardIntro
-        v-if="showIntro"
-        @toggle="() => (this.showGen = true) && (this.showIntro = false)"
-      />
-    </Transition>
-    <Transition name="generator">
-      <CardGenerator
-        v-if="showGen"
-        @toggleback="() => (this.showIntro = true) && (this.showGen = false)"
-      />
+      <CardIntro v-if="showIntro" @toggle="() => (this.showIntro = false)" />
+      <CardGenerator v-else @toggleback="() => (this.showIntro = true)" />
     </Transition>
   </div>
 </template>
@@ -30,45 +22,23 @@ export default {
 };
 </script>
 <style lang="scss">
-.intro-leave-from {
-  transform: translateX(0);
-}
 .intro-leave-to {
-  opacity: 0;
-  transform: translateX(-100%);
+  transform: translateX(-70%);
 }
-.intro-leave-active {
-  transition: all 2s ease;
-}
-.intro-enter-from {
-  transform: translateX(-100%);
-}
-.intro-enter-to {
-  opacity: 1;
-  transform: translateX(0);
-}
-.intro-enter-active {
-  transition: all 2s ease;
-}
-.generator-leave-from {
-  opacity: 1;
-  transform: translateX(0);
-}
-.generator-leave-to {
-  transform: translateX(100%);
-}
-.generator-leave-active {
-  transition: all 2s ease;
-}
-.generator-enter-from {
-  transform: translateX(100%);
-}
-.generator-enter-to {
-  opacity: 1;
+.intro-leave {
   transform: translateX(50%);
 }
-.generator-enter-active {
-  transition: all 6s ease;
+.intro-leave-active {
+  transition: all 1s linear;
+}
+.intro-enter {
+  transform: translateX(70%);
+}
+.intro-enter-active {
+  transition: all 1s 0.2s linear;
+}
+.intro-enter-to {
+  transform: translateX(0%);
 }
 .page-block {
   display: flex;

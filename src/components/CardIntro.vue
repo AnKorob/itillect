@@ -44,24 +44,25 @@ export default {
   margin-top: 20px;
   &-text {
     width: auto;
-    display: flex;
+    display: block;
     flex-direction: column;
     align-items: flex-start;
     max-width: 50%;
-    & > p {
-      margin-top: 10px;
-    }
     & > img {
       height: 246px;
       width: 400px;
+      margin-bottom: 10px;
       & + p {
         color: dodgerblue;
+      }
+      & ~ p {
+        margin-bottom: 10px;
       }
     }
   }
 }
 p {
-  margin-bottom: 10px;
+  margin-bottom: 30px;
   font-size: 16px;
   font-weight: 300;
   color: #a9a9a9;
@@ -69,7 +70,9 @@ p {
 .action-button {
   cursor: pointer;
 }
-ul,
+ul {
+  margin-bottom: 30px;
+}
 li {
   display: inline;
   margin: 5px;
@@ -80,6 +83,7 @@ li {
 h1 {
   font-weight: 300;
   font-size: 40px;
+  margin-bottom: 30px;
 }
 .action-button {
   display: flex;

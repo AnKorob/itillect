@@ -14,6 +14,9 @@
 <script>
 export default {
   name: "CardGenerator",
+  data: () => ({
+    companyId: "",
+  }),
 };
 </script>
 <style lang="scss">
@@ -26,6 +29,9 @@ export default {
     flex-direction: row;
     height: 56px;
     max-width: 50%;
+    margin-bottom: 46px;
+    margin-top: 32px;
+    padding-left: 24px;
   }
 }
 .action-button {
