@@ -12,6 +12,7 @@
   height: 100%;
   width: 100%;
   font-family: "Roboto", sans-serif;
+  box-sizing: border-box;
 }
 * {
   margin: 0;
@@ -23,11 +24,13 @@ html {
   padding: 0;
   height: 100%;
   width: 100%;
+  box-sizing: border-box;
 }
 body {
   margin: 0;
   padding: 0;
   height: 100%;
   width: 100%;
+  box-sizing: border-box;
 }
 </style>

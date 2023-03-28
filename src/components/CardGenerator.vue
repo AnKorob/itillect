@@ -3,7 +3,9 @@
     Введите ИНН организации
     <div class="card-generator-finder">
       <input type="text" v-model="companyId" />
-      <button class="action-button--find">Find</button>
+      <button class="action-button--find" @click="($event) => $emit('moveto')">
+        Find
+      </button>
     </div>
     <p>Мы найдем реквизиты организациий и ИП в ЕГРЮЛ или ЕГРИП.</p>
     <p>В ИНН организации 10 цифр или 12 цифр для ИП.</p>

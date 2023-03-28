@@ -67,29 +67,28 @@ p {
   font-weight: 300;
   color: #a9a9a9;
 }
-.action-button {
-  cursor: pointer;
-}
 ul {
   margin-bottom: 30px;
 }
 li {
   display: inline;
-  margin: 5px;
+  margin-right: 20px;
   font-size: 16px;
   font-weight: 300;
   color: #a9a9a9;
 }
 h1 {
-  font-weight: 300;
+  font-weight: 500;
   font-size: 40px;
   margin-bottom: 30px;
 }
 .action-button {
   display: flex;
   width: auto;
-  height: 32px;
+  height: 56px;
   padding: 18px;
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
   font-weight: 600;
   color: #fff;
   border: none;
