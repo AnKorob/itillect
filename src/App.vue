@@ -33,4 +33,10 @@ body {
   width: 100%;
   box-sizing: border-box;
 }
+@media (max-width: 770px) {
+  #app {
+    display: flex;
+    justify-content: center;
+  }
+}
 </style>

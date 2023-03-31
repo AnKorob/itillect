@@ -13,7 +13,7 @@
         </router-link>
       </div>
       <div>
-        <router-link class="link">OOO </router-link>
+        <router-link class="link" :to="{ name: 'home' }">OOO </router-link>
       </div>
     </div>
   </div>
@@ -30,17 +30,15 @@ export default {
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-height: 72px;
   justify-content: space-between;
   align-items: center;
   font-size: 16px;
-  padding: 24px 30px 12px;
   &-nav {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin: 16px 0;
+    margin-top: 16px;
     width: 100%;
     height: 100%;
     color: #959595;
@@ -80,6 +78,30 @@ export default {
   &:hover {
     color: #000;
     cursor: pointer;
+  }
+}
+@media (max-width: 770px) {
+  .page-header {
+    &-content {
+      flex-direction: column;
+      &-logo {
+        height: 36px;
+        width: 36px;
+      }
+      &-link {
+        display: none;
+      }
+    }
+    &-nav {
+      flex-direction: column-reverse;
+      align-content: flex-start;
+      background-color: #ebebeb;
+    }
+  }
+  .link {
+    display: flex;
+    justify-content: flex-start;
+    width: 320px;
   }
 }
 </style>

@@ -1,27 +1,22 @@
 <template>
   <div class="card-generator">
-    Введите ИНН организации
+    Введите Email получателя
     <div class="card-generator-finder">
-      <input type="text" v-model="inn" @input="checkInn" />
+      <input type="text" v-model="companyId" />
       <button class="action-button--find" @click="$emit('moveto')">Find</button>
     </div>
-    <p>Мы найдем реквизиты организациий и ИП в ЕГРЮЛ или ЕГРИП.</p>
-    <p>В ИНН организации 10 цифр или 12 цифр для ИП.</p>
-    <p>ИНН можно найти в свидетельстве о регистрации организации</p>
-    <button class="action-button" @click="$emit('toggleback')">Обратно</button>
+    <p>
+      На указанный Email мы отправим письмо с приложенной карточкой в формате
+      PDF
+    </p>
   </div>
 </template>
 <script>
 export default {
   name: "CardGenerator",
   data: () => ({
-    inn: "",
+    companyId: "",
   }),
-  computed: {
-    checkInn() {
-      return this.inn && /\d{10,12}/.test(this.inn);
-    },
-  },
 };
 </script>
 <style lang="scss">

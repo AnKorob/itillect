@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import PageHeader from "@/components/PageHeader.vue";
-import PageBlock from "@/components/PageBlock.vue";
+import PageHeader from "@/components/PageViewComponents/PageHeader.vue";
+import PageBlock from "@/components/PageViewComponents/PageBlock.vue";
 
 export default {
   name: "PageView",
@@ -24,5 +24,12 @@ export default {
   display: flex;
   flex-direction: column;
   font-family: "Roboto", sans-serif;
+  padding: 18px 96px;
+}
+@media (max-width: 770px) {
+  .page-view {
+    padding: 0px;
+    align-items: center;
+  }
 }
 </style>
