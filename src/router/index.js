@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import PageView from "@/views/PageView.vue";
+import PageBlock from "@/views/PageBlock.vue";
+import CardPage from "@/views/CardPage.vue";
 
 Vue.use(VueRouter);
 
@@ -8,7 +9,12 @@ const routes = [
   {
     path: "/",
     name: "home",
-    component: PageView,
+    component: PageBlock,
+  },
+  {
+    path: "/bcard/:hash",
+    name: "generator",
+    component: CardPage,
   },
 ];
 

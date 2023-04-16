@@ -1,9 +1,16 @@
 <template>
   <div class="card-generator">
     Введите Email получателя
+    <el-button class="type" @click="closeEmail" plain>Отмена</el-button>
     <div class="card-generator-finder">
-      <input type="text" v-model="companyId" />
-      <button class="action-button--find" @click="$emit('moveto')">Find</button>
+      <el-input
+        placeholder="Please input Email"
+        v-model="email"
+        @change="checkEmail"
+      ></el-input>
+      <el-button type="primary" :disabled="!isEmailValid" @click="sendEmail"
+        >Send Email</el-button
+      >
     </div>
     <p>
       На указанный Email мы отправим письмо с приложенной карточкой в формате
@@ -11,19 +18,47 @@
     </p>
   </div>
 </template>
+
 <script>
 export default {
-  name: "CardGenerator",
+  name: "SendEmail",
   data: () => ({
-    companyId: "",
+    isEmailValid: false,
+    email: "",
   }),
+  methods: {
+    closeEmail() {
+      this.$emit("close");
+    },
+    sendEmail() {
+      this.$emit("mailsent");
+    },
+    checkEmail() {
+      if (
+        this.email &&
+        /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_-])+\.([A-Za-z]{2,4})$/.test(
+          this.email
+        )
+      )
+        this.isEmailValid = true;
+    },
+  },
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .card-generator {
   height: 100%;
   width: 100%;
   font-size: 48px;
+  position: absolute;
+  z-index: 5;
+  background-color: #fff;
+  & > .type {
+    float: right;
+  }
+  & > p {
+    font-size: 16px;
+  }
   &-finder {
     display: flex;
     flex-direction: row;
@@ -31,6 +66,16 @@ export default {
     width: 100%;
     margin-bottom: 46px;
     margin-top: 32px;
+    & > input {
+      border: 1px solid #a9a9a9;
+      border-top-left-radius: 6px;
+      border-bottom-left-radius: 6px;
+      outline: none;
+      padding: 18px;
+      font-size: 18px;
+      font-weight: 100;
+      width: 60%;
+    }
   }
 }
 .action-button {
@@ -62,19 +107,6 @@ export default {
     align-items: center;
   }
 }
-p {
-  font-size: 16px;
-}
-input {
-  border: 1px solid #a9a9a9;
-  border-top-left-radius: 6px;
-  border-bottom-left-radius: 6px;
-  outline: none;
-  padding: 18px;
-  font-size: 18px;
-  font-weight: 100;
-  width: 60%;
-}
 @media (max-width: 770px) {
   .card-generator {
     font-size: 32px;
@@ -84,12 +116,12 @@ input {
       height: auto;
       flex-direction: column;
       margin-bottom: 48px;
+      & > input {
+        border-radius: 6px;
+        margin-bottom: 24px;
+        width: 100%;
+      }
     }
-  }
-  input {
-    border-radius: 6px;
-    margin-bottom: 24px;
-    width: 100%;
   }
   .action-button--find {
     border-radius: 6px;

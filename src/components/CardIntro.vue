@@ -1,7 +1,11 @@
 <template>
   <div class="card-intro">
     <div class="card-intro-text">
-      <h1>Удобная онлайн карточка вашей организации.</h1>
+      <h1>
+        Удобная<br />
+        онлайн карточка <br />
+        вашей организации
+      </h1>
       <p>Сгенерируйте карточку вашей организации.</p>
       <p>
         Копируйте данные для договоров и делитесь карточкой с вашими партнерами
@@ -17,9 +21,9 @@
         Открытый доступ к карточке без интернета с мобильного телефона.
         Сохраните на мобильном HomeScreen.
       </p>
-      <button class="action-button" @click="$emit('toggle')">
+      <el-button type="primary" @click="$emit('toggle')">
         Сгенерировать карточку
-      </button>
+      </el-button>
     </div>
     <div class="card-intro-text">
       <div class="card-intro-text-img">
@@ -33,6 +37,8 @@
 <script>
 export default {
   name: "CardIntro",
+  data: () => ({}),
+  methods: {},
 };
 </script>
 <style lang="scss">
@@ -49,14 +55,56 @@ export default {
     flex-direction: column;
     align-items: flex-start;
     max-width: 45%;
+    & > .el-button {
+      font-size: 16px;
+      font-weight: 600;
+    }
+    & > h1 {
+      font-weight: 500;
+      font-size: 48px;
+      margin-bottom: 30px;
+    }
+    & > p {
+      margin-bottom: 30px;
+      font-size: 16px;
+      font-weight: 300;
+      color: #a9a9a9;
+      width: 100%;
+    }
+    & > ul {
+      margin-bottom: 30px;
+      & > li {
+        display: inline;
+        margin-right: 20px;
+        font-size: 16px;
+        font-weight: 300;
+        color: #a9a9a9;
+        position: relative;
+        &:not(:last-child)::after {
+          content: "";
+          height: 6px;
+          width: 6px;
+          background-color: #0a81ff;
+          border-radius: 50%;
+          display: block;
+          position: absolute;
+          top: 50%;
+          right: -10px;
+          transform: translate(0, -50%);
+        }
+      }
+    }
     &:nth-child(2) {
       align-items: flex-end;
+      & > p {
+        text-align: right;
+      }
     }
     &-img {
       display: flex;
       top: 0px;
       right: 0px;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
       justify-content: flex-end;
       & > img {
         max-height: 246px;
@@ -64,51 +112,18 @@ export default {
         float: right;
       }
       & + p {
-        color: dodgerblue;
+        color: #0a81ff;
+        font-weight: 600;
+        & + p {
+          font-size: 13px;
+          color: #666666;
+        }
       }
       & ~ p {
-        margin-bottom: 10px;
+        margin-bottom: 20px;
       }
     }
   }
-}
-p {
-  margin-bottom: 30px;
-  font-size: 16px;
-  font-weight: 300;
-  color: #a9a9a9;
-  width: 100%;
-}
-ul {
-  margin-bottom: 30px;
-}
-li {
-  display: inline;
-  margin-right: 20px;
-  font-size: 16px;
-  font-weight: 300;
-  color: #a9a9a9;
-}
-h1 {
-  font-weight: 500;
-  font-size: 40px;
-  margin-bottom: 30px;
-}
-.action-button {
-  display: flex;
-  width: auto;
-  height: 56px;
-  padding: 18px;
-  font-family: "Roboto", sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  background-color: dodgerblue;
-  justify-content: center;
-  align-items: center;
 }
 @media (max-width: 770px) {
   .card-intro {
@@ -124,6 +139,13 @@ h1 {
       width: 100%;
       display: flex;
       justify-content: center;
+      & > h1 {
+        width: 100%;
+        font-size: 32px;
+      }
+      & > p {
+        margin-bottom: 0px;
+      }
       &-img {
         & > img {
           display: none;
@@ -131,17 +153,10 @@ h1 {
       }
     }
   }
-  h1 {
-    width: 100%;
-    font-size: 32px;
-  }
-  p {
-    margin-bottom: 0px;
-  }
-  .action-button {
-    width: 100%;
-    margin-top: 32px;
-    margin-bottom: 32px;
-  }
+  // .action-button {
+  //   width: 100%;
+  //   margin-top: 32px;
+  //   margin-bottom: 32px;
+  // }
 }
 </style>

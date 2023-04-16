@@ -2,26 +2,25 @@
   <div class="page-header">
     <div class="page-header-content">
       <div class="page-header-content-logo">
-        <img src="@/assets/logo.svg" />
+        <img src="@/assets/logo.svg" @click="goStart" />
       </div>
       <div class="page-header-content-link">Счета и акты онлайн</div>
-    </div>
-    <div class="page-header-nav">
-      <div>
-        <router-link class="link" :to="{ name: 'home' }">
-          Сгенерировать новую карточку
-        </router-link>
-      </div>
-      <div>
-        <router-link class="link" :to="{ name: 'home' }">OOO </router-link>
-      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "PageHeader",
+  computed: {
+    ...mapState(["searchCompany"]),
+  },
+  methods: {
+    goStart() {
+      this.$router.push({ name: "home" });
+    },
+  },
 };
 </script>
 
@@ -29,35 +28,30 @@ export default {
 .page-header {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  justify-content: space-between;
+  width: 1110px;
+  justify-content: center;
   align-items: center;
   font-size: 16px;
-  &-nav {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 16px;
-    width: 100%;
-    height: 100%;
-    color: #959595;
-  }
+  padding-top: 24px;
+
   &-content {
     display: flex;
     width: 100%;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+
     &-logo {
       height: 36px;
       width: 36px;
       cursor: pointer;
-      > img {
+
+      & > img {
         height: 36px;
         width: 36px;
       }
     }
+
     &-link {
       display: flex;
       height: 100%;
@@ -69,17 +63,7 @@ export default {
     }
   }
 }
-.link {
-  text-decoration: none;
-  color: #959595;
-  cursor: pointer;
-  width: 100%;
-  height: 100%;
-  &:hover {
-    color: #000;
-    cursor: pointer;
-  }
-}
+
 @media (max-width: 770px) {
   .page-header {
     &-content {
@@ -91,11 +75,6 @@ export default {
       &-link {
         display: none;
       }
-    }
-    &-nav {
-      flex-direction: column-reverse;
-      align-content: flex-start;
-      background-color: #ebebeb;
     }
   }
   .link {

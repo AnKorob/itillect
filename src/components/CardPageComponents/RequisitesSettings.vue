@@ -1,47 +1,122 @@
 <template>
   <div class="settings">
-    <h1>Настройки</h1>
-    <div class="settings-header">Название ООО</div>
-    <BaseSwitch
-      v-modal="isCustomer"
-      @input="(toggle) => (this.isCustomer = toggle)"
-    />
+    <div class="content-header">Настройки</div>
+    <!-- <el-radio-group v-model="isCustomer">
+      <el-radio-button label="true">Исполнитель</el-radio-button>
+      <el-radio-button label="false">Заказчик</el-radio-button>
+    </el-radio-group> -->
+    <div class="settings-header">{{ this.searchCompany.info[1].value }}</div>
+    <el-switch
+      class="settings-header-switcher"
+      v-model="isCustomer"
+      active-color="#e8e8e8"
+      inactive-color="#e8e8e8"
+      active-text="Заказчик"
+      inactive-text="Исполнитель"
+      @change="reverse"
+    >
+    </el-switch>
+    <!-- <el-radio-group v-model="isIndividual">
+      <el-radio-button label="true">Юр. лицо или ИП</el-radio-button>
+      <el-radio-button label="false">Физ. лицо</el-radio-button>
+    </el-radio-group> -->
     <div class="settings-header">Контрагент</div>
-    <BaseSwitch
-      v-modal="isIndividual"
-      @input="(toggle) => (this.isIndividual = toggle)"
-    />
+    <el-switch
+      class="settings-header-switcher"
+      v-model="isIndividual"
+      active-color="#e8e8e8"
+      inactive-color="#e8e8e8"
+      active-text="Физ. лицо"
+      inactive-text="Юр. лицо или ИП"
+      @change="findagent"
+    >
+    </el-switch>
+
     <div class="settings-field" v-if="!isIndividual">
       <label class="settings-field-label">ИНН</label>
-      <input type="text" class="settings-field-value" />
+      <el-input
+        placeholder="Please input"
+        v-model="oppositeInn"
+        type="number"
+        @focus="oppositeInn = ''"
+        v-if="!isIndividual"
+        minlength="10"
+        maxlength="12"
+        @change="getOppositeCompany"
+      ></el-input>
     </div>
     <div class="settings-field" v-if="!isIndividual">
       <label class="settings-field-label">БИК</label>
-      <input type="text" class="settings-field-value" />
+      <el-input
+        placeholder="Please input"
+        v-model="oppositeBik"
+        type="number"
+        minlength="9"
+        maxlength="9"
+        @focus="oppositeBik = ''"
+        v-if="!isIndividual"
+        @input="getOppositeBank"
+      ></el-input>
     </div>
     <div class="settings-field" v-if="!isIndividual">
       <label class="settings-field-label">Р/с</label>
-      <input type="text" class="settings-field-value" />
+      <el-input
+        placeholder="Please input"
+        v-model="oppositeBankAccount"
+        type="number"
+        minlength="20"
+        maxlength="20"
+        @input="getOppositeAccount"
+        @focus="oppositeBankAccount = ''"
+        v-if="!isIndividual"
+      >
+        {{ oppositeBankAccount }}</el-input
+      >
     </div>
     <div class="settings-field" v-if="isIndividual">
       <label class="settings-field-label">ФИО</label>
-      <input type="text" class="settings-field-value" />
+      <el-input
+        placeholder="Please input"
+        v-model="person.fio"
+        v-if="isIndividual"
+        @focus="person.fio = ''"
+      ></el-input>
     </div>
     <div class="settings-field" v-if="isIndividual">
       <label class="settings-field-label">Серия и Номер</label>
-      <input type="text" class="settings-field-value" />
+      <el-input
+        placeholder="Please input"
+        v-model="person.passport"
+        @focus="person.passport = ''"
+        v-if="isIndividual"
+      ></el-input>
     </div>
     <div class="settings-field" v-if="isIndividual">
       <label class="settings-field-label">Дата Выдачи</label>
-      <input type="text" class="settings-field-value" />
+      <el-input
+        placeholder="Please input"
+        v-model="person.whenPassport"
+        @focus="person.whenPassport = ''"
+        v-if="isIndividual"
+      ></el-input>
     </div>
     <div class="settings-field" v-if="isIndividual">
       <label class="settings-field-label">Кем Выдан</label>
-      <input type="text" class="settings-field-value" />
+      <el-input
+        placeholder="Please input"
+        v-model="person.whomPassport"
+        @focus="person.whomPassport = ''"
+        v-if="isIndividual"
+      ></el-input>
     </div>
     <div class="settings-field" v-if="isIndividual">
       <label class="settings-field-label">Код Подразделения</label>
-      <input type="text" class="settings-field-value" />
+      <el-input
+        placeholder="Please input"
+        v-model="person.idPassport"
+        @focus="person.idPassport = ''"
+        v-if="isIndividual"
+      ></el-input>
     </div>
     <br />
     <div class="settings-comment">
@@ -50,17 +125,68 @@
     </div>
   </div>
 </template>
+<!--/^\d{3}[-]\d{3}$.test(person.idPassport) рега на код подразделения-->
+<!--/^\d{4}[ ]\d{6}$.test(person.passport) серия номер паспорта-->
 <script>
-import BaseSwitch from "@/components/BaseComponents/BaseSwitch.vue";
+import { mapState, mapActions } from "vuex";
 export default {
   name: "RequisitesSettings",
-  components: {
-    BaseSwitch,
+  components: {},
+  props: {
+    value: Boolean,
+    oppositeAccount: String,
   },
   data: () => ({
+    // isCustomer: "false",
+    // isIndividual: "false",
     isIndividual: false,
     isCustomer: false,
+    oppositeBik: "",
+    oppositeInn: "",
+    oppositeBankAccount: "",
+    person: {
+      fio: "Иванов Иван Иванович",
+      passport: "6666 000001",
+      whomPassport: "Отделом ОУФМС России по гор.Москве",
+      whenPassport: "10.11.2012",
+      idPassport: "100-500",
+    },
   }),
+  mounted() {
+    this.isCustomer = this.value;
+  },
+  computed: {
+    ...mapState(["oppositeCompany", "oppositeBank", "searchCompany"]),
+  },
+  updated() {
+    this.$emit("person", this.person);
+  },
+  methods: {
+    ...mapActions({
+      getOppositeCompanyById: "getOppositeCompanyById",
+      getOppositeBankByBik: "getOppositeBankByBik",
+    }),
+    getOppositeBank() {
+      if (/^\d{9}$/.test(this.oppositeBik))
+        this.getOppositeBankByBik(this.oppositeBik);
+    },
+    getOppositeCompany() {
+      if (/^\d{10,12}$/.test(this.oppositeInn))
+        this.getOppositeCompanyById(this.oppositeInn);
+    },
+    reverse() {
+      this.$emit("reverse", this.isCustomer);
+    },
+    findagent() {
+      this.$emit("findagent", this.isIndividual);
+    },
+    getOppositeAccount() {
+      this.$emit("oppositeaccount", this.oppositeBankAccount);
+    },
+    // checkInn() {
+    //   this.isValid = this.companyInn && /^\d{10,12}$/.test(this.companyInn);
+    // },
+  },
 };
 </script>
 <style lang="scss">
@@ -69,6 +195,14 @@ export default {
   flex-direction: column;
   width: 332px;
   padding-left: 32px;
+  height: 500px;
+  justify-content: space-between;
+  &-header {
+    &-switcher {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
   &-field {
     display: flex;
     flex-direction: column;
@@ -97,11 +231,6 @@ export default {
     font-weight: 300;
     border-top: 1px solid #666;
   }
-}
-h1 {
-  font-size: 24px;
-  font-weight: 300;
-  margin-bottom: 24px;
 }
 @media (max-width: 770px) {
   .settings {

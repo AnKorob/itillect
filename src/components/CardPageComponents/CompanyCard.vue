@@ -1,76 +1,150 @@
 <template>
   <div class="company-card">
     <div class="company-card-header">
-      <div class="company-card-header-name">"OOOSmth"</div>
+      <div class="company-card-header-name">
+        {{ searchCompany.info[1].value }}
+      </div>
       <div class="company-card-header-button">
-        <button class="type">PDF</button>
-        <button class="type">DOCX</button>
-        <button class="type">Email</button>
-        <button class="type">Link</button>
+        <el-button class="type" plain>PDF</el-button>
+        <el-button class="type" plain>DOCX</el-button>
+        <el-button class="type" plain @click="openEmail">Email</el-button>
+        <el-button class="type" plain @click="copyLink">Ссылка</el-button>
       </div>
     </div>
     <div class="company-card-info">
-      <div
+      <el-row
         class="company-card-info-block"
-        v-for="companyOption in companyOptions"
-        :key="companyOption"
+        v-for="field in searchCompany.info"
+        :key="field.key"
       >
-        <div class="company-card-info-block-option">{{ companyOption }}</div>
-        <div class="company-card-info-block-value"></div>
-        <button class="copy">Copy</button>
-      </div>
+        <el-col :span="6" :offset="1" class="company-card-info-block-option">{{
+          field.label
+        }}</el-col>
+        <el-col :span="14" class="company-card-info-block-value">{{
+          field.value
+        }}</el-col>
+        <el-col :span="4"
+          ><el-button type="primary" class="copy" @click="copyText(field.value)"
+            >Копировать</el-button
+          ></el-col
+        >
+      </el-row>
+
       <div class="company-card-info-header">Банковские реквизиты</div>
-      <div
+      <el-row class="company-card-info-block">
+        <el-col :span="6" :offset="1" class="company-card-info-block-option"
+          >СЧЕТ</el-col
+        >
+        <el-col :span="13" class="company-card-info-block-value">
+          <el-input
+            placeholder="Please input"
+            v-model="bankAccount"
+            minlength="20"
+            maxlength="20"
+            type="number"
+            @change="setAccount"
+            @focus="bankAccount = ''"
+            >{{ bankAccount }}</el-input
+          >
+        </el-col>
+        <el-col :span="4"
+          ><el-button type="primary" class="copy" @click="copyText(bankAccount)"
+            >Копировать</el-button
+          ></el-col
+        >
+      </el-row>
+      <el-row class="company-card-info-block">
+        <el-col :span="6" :offset="1" class="company-card-info-block-option"
+          >БИК</el-col
+        >
+        <el-col :span="13" class="company-card-info-block-value">
+          <el-input
+            placeholder="Please input"
+            v-model="companyBik"
+            type="number"
+            minlength="9"
+            maxlength="9"
+            @focus="companyBik = ''"
+            @input="getBank"
+            >{{ companyBik }}</el-input
+          >
+        </el-col>
+        <el-col :span="4"
+          ><el-button type="primary" class="copy" @click="copyText(companyBik)"
+            >Копировать</el-button
+          ></el-col
+        >
+      </el-row>
+
+      <el-row
         class="company-card-info-block"
-        v-for="(value, name) in post"
-        :key="value"
+        v-for="field in companyBank"
+        :key="field.key"
       >
-        <div class="company-card-info-block-option">
-          {{ name }}
-        </div>
-        <div class="company-card-info-block-value">{{ value }}</div>
-        <button class="copy">Copy</button>
-      </div>
+        <el-col :span="6" :offset="1" class="company-card-info-block-option">{{
+          field.label
+        }}</el-col>
+        <el-col :span="13" class="company-card-info-block-value">{{
+          field.value
+        }}</el-col>
+        <el-col :span="4"
+          ><el-button type="primary" class="copy" @click="copyText(field.value)"
+            >Копировать</el-button
+          ></el-col
+        >
+      </el-row>
     </div>
   </div>
 </template>
 <script>
+import { mapState, mapActions } from "vuex";
 export default {
   name: "CompanyCard",
   data: () => ({
-    companyOptions: [
-      "Полное Наименование",
-      "Краткое Наименование",
-      "Юр. Адрес",
-      "Почтовый Адрес",
-      "ИНН",
-      "КПП",
-      "ОГРН",
-      "ОКПО",
-      "Ген. Директор",
-    ],
-    bankSettings: ["Расчетный Счет", "БИК", "Наименование Банка", "Корр/счет"],
-    post: { title: "", id: "", body: "" },
+    companyBik: "",
+    bankAccount: "",
   }),
-  methods: {},
+  props: {
+    value: String,
+  },
+  methods: {
+    ...mapActions({
+      getBankByBik: "getBankByBik",
+    }),
+    copyLink() {
+      navigator.clipboard.writeText(window.location.href);
+    },
+    copyText(text) {
+      this.$message("Скопировано");
+      navigator.clipboard.writeText(text);
+    },
+    openEmail() {
+      this.$emit("open");
+    },
+    getBank() {
+      if (/^\d{9}$/.test(this.companyBik)) this.getBankByBik(this.companyBik);
+    },
+    setAccount() {
+      this.$emit("setaccount", this.bankAccount);
+    },
+  },
+  computed: {
+    ...mapState(["companyBank", "searchCompany", "companiesTabs"]),
+  },
   mounted() {
-    fetch("https://jsonplaceholder.typicode.com/todos/1")
-      .then((response) => response.json())
-      .then(
-        (json) =>
-          (this.post.title = json.title) &&
-          (this.post.id = json.id) &&
-          (this.post.body = json.body)
-      );
+    this.bankAccount = this.value;
+    console.log(this.companiesTabs);
   },
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .company-card {
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: 100%;
   margin-bottom: 38px;
+
   &-header {
     display: flex;
     flex-direction: row;
@@ -79,109 +153,116 @@ export default {
     width: 100%;
     font-weight: 300;
     margin-bottom: 32px;
+
     &-name {
       display: flex;
-      font-size: 36px;
+      font-size: 48px;
+      font-weight: 400;
     }
+
     &-button {
       display: flex;
       cursor: pointer;
     }
   }
+
   &-info {
     display: flex;
+    height: 100%;
     flex-direction: column;
+
     &-header {
       font-size: 20px;
       margin-top: 32px;
       margin-bottom: 32px;
     }
+
     &-block {
       display: flex;
-      flex-direction: row;
-      align-content: center;
-      align-items: center;
       justify-content: center;
+      width: 100%;
+      flex-direction: row;
+      height: 100%;
+      font-size: 16px;
+      text-align: justify;
+
+      &:hover {
+        background-color: #f5f5f5;
+        .copy {
+          padding: 0 24px;
+          opacity: 1;
+          width: 96px;
+          height: 22px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          &:hover {
+            opacity: 1;
+            padding: 4px 24px;
+            transition: 0.1s;
+            background-color: #03274e;
+            border: 1px solid #03274e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+        }
+      }
+
       & > .copy--visible {
         width: 48px;
       }
-      &:hover {
-        background-color: #ccc;
-        & > .copy {
-          opacity: 1;
-          width: 96px;
-        }
-      }
+
+      // &:hover {
+      //   background-color: #ccc;
+
+      //   & > .copy {
+      //     opacity: 1;
+      //     width: 96px;
+      //   }
+      // }
       &-option {
+        height: 100%;
         display: flex;
         color: #666666;
         justify-content: flex-start;
         align-items: center;
-        width: 300px;
+        text-align: justify;
         text-transform: uppercase;
       }
       &-value {
         display: flex;
+
         align-items: center;
         padding: 0 12px;
-        width: 600px;
+        text-align: justify;
         font-weight: 500;
         text-transform: uppercase;
       }
     }
   }
 }
-.type {
-  cursor: pointer;
-  width: auto;
-  display: block;
-  height: 32px;
-  float: left;
-  margin-left: 12px;
-  padding: 0 14px;
-  font-size: 14px;
-  border-radius: 4px;
-  border: 1px solid #e8e8e8;
-  background-color: #fff;
-  &:hover {
-    cursor: pointer;
-    border-color: #0a81ff;
-    color: #0a81ff;
-  }
-}
 .copy {
+  float: right;
+  padding: 0 24px;
+  opacity: 0;
+  width: 96px;
+  height: 22px;
   display: flex;
   justify-content: center;
   align-items: center;
-  opacity: 0;
-  margin: 0 18px;
-  width: 96px;
-  right: 0;
-  top: 6px;
-  cursor: pointer;
-  font-size: 12px;
-  height: 24px;
-  background-color: #0a81ff;
-  border-radius: 3px;
-  color: #fff;
-  border: none;
-  &:hover {
-    opacity: 1;
-    width: 96px;
-    display: flex;
-    height: 24px;
-    justify-content: center;
-    align-items: center;
-    margin: 0 18px;
-    border: none;
-    background-color: #03274e;
-    color: #fff;
-    font-size: 12px;
-    border-radius: 3px;
-    cursor: pointer;
-    right: 0;
-    top: 6px;
+}
+.type {
+  padding: 0 24px !important;
+  height: 32px;
+  float: left;
+  margin-bottom: 10px !important;
+  &:first-of-type {
+    margin-left: 10px;
   }
+}
+input {
+  height: 22px;
 }
 @media (max-width: 770px) {
   .company-card {
@@ -192,8 +273,6 @@ export default {
         justify-content: space-around;
         align-items: center;
         flex-wrap: wrap;
-        // padding-left: 60px;
-        // padding-right: 60px;
       }
     }
     &-info {
@@ -213,13 +292,16 @@ export default {
   .copy {
     position: absolute;
     width: 32px;
-    height: 16px;
+    height: 16px !important;
+    font-size: 12px !important;
     margin: 0;
     top: 0px;
     right: 0px;
     &:hover {
       width: 32px;
-      height: 16px;
+      height: 16px !important;
+      font-size: 12px !important;
+      padding-top: 1px !important;
       margin: 0;
       top: 0px;
       right: 0px;
@@ -227,8 +309,6 @@ export default {
   }
   .type {
     width: 120px;
-    margin: 0;
-    margin-bottom: 10px;
   }
 }
 </style>
