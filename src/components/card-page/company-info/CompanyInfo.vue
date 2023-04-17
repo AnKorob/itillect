@@ -17,35 +17,34 @@
         v-for="field in searchCompany.info"
         :key="field.key"
       >
-        <el-col :span="6" :offset="1" class="company-card-info-block-option">{{
-          field.label
-        }}</el-col>
-        <el-col :span="14" class="company-card-info-block-value">{{
-          field.value
-        }}</el-col>
-        <el-col :span="4"
-          ><el-button type="primary" class="copy" @click="copyText(field.value)"
-            >Копировать</el-button
-          ></el-col
-        >
+        <el-col :span="6" :offset="1" class="company-card-info-block-option">
+          {{ field.label }}
+        </el-col>
+        <el-col :span="14" class="company-card-info-block-value">
+          {{ field.value }}
+        </el-col>
+        <el-col :span="4">
+          <el-button type="primary" class="copy" @click="copyText(field.value)">
+            Копировать
+          </el-button>
+        </el-col>
       </el-row>
 
       <div class="company-card-info-header">Банковские реквизиты</div>
       <el-row class="company-card-info-block">
-        <el-col :span="6" :offset="1" class="company-card-info-block-option"
-          >СЧЕТ</el-col
-        >
+        <el-col :span="6" :offset="1" class="company-card-info-block-option">
+          СЧЕТ
+        </el-col>
         <el-col :span="13" class="company-card-info-block-value">
           <el-input
             placeholder="Please input"
             v-model="bankAccount"
-            minlength="20"
-            maxlength="20"
             type="number"
             @change="setAccount"
             @focus="bankAccount = ''"
-            >{{ bankAccount }}</el-input
           >
+            {{ bankAccount }}
+          </el-input>
         </el-col>
         <el-col :span="4"
           ><el-button type="primary" class="copy" @click="copyText(bankAccount)"
@@ -183,6 +182,8 @@ export default {
       width: 100%;
       flex-direction: row;
       height: 100%;
+      margin: 0;
+      padding: 8px 0;
       font-size: 16px;
       text-align: justify;
 
@@ -191,6 +192,7 @@ export default {
         .copy {
           padding: 0 24px;
           opacity: 1;
+          margin-right: 10px;
           width: 96px;
           height: 22px;
           display: flex;
@@ -213,14 +215,6 @@ export default {
         width: 48px;
       }
 
-      // &:hover {
-      //   background-color: #ccc;
-
-      //   & > .copy {
-      //     opacity: 1;
-      //     width: 96px;
-      //   }
-      // }
       &-option {
         height: 100%;
         display: flex;
@@ -232,7 +226,6 @@ export default {
       }
       &-value {
         display: flex;
-
         align-items: center;
         padding: 0 12px;
         text-align: justify;
@@ -240,6 +233,12 @@ export default {
         text-transform: uppercase;
       }
     }
+  }
+}
+
+.company-card::v-deep {
+  .el-input {
+    min-height: 36px;
   }
 }
 .copy {
@@ -261,9 +260,7 @@ export default {
     margin-left: 10px;
   }
 }
-input {
-  height: 22px;
-}
+
 @media (max-width: 770px) {
   .company-card {
     &-header {

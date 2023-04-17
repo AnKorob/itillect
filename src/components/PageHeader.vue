@@ -2,7 +2,7 @@
   <div class="page-header">
     <div class="page-header-content">
       <div class="page-header-content-logo">
-        <img src="@/assets/logo.svg" @click="goStart" />
+        <span v-html="logo" @click="goStart" />
       </div>
       <div class="page-header-content-link">Счета и акты онлайн</div>
     </div>
@@ -11,8 +11,15 @@
 
 <script>
 import { mapState } from "vuex";
+import logo from "@/assets/logo";
+
 export default {
   name: "PageHeader",
+  data() {
+    return {
+      logo,
+    };
+  },
   computed: {
     ...mapState(["searchCompany"]),
   },

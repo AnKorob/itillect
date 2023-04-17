@@ -1,24 +1,13 @@
 <template>
   <div class="page-block">
-    <Transition name="intro">
-      <CardIntro
-        v-if="showIntro"
-        @toggle="() => (this.showGenerator = true) && (this.showIntro = false)"
-      />
-    </Transition>
-    <Transition name="generator">
-      <CardGenerator
-        v-if="showGenerator"
-        @togglefurther="
-          () => (this.showPage = true) && (this.showGenerator = false)
-        "
-      />
+    <Transition name="page-block">
+      <component :is="component" @toggle="showIntro = !showIntro" />
     </Transition>
   </div>
 </template>
 <script>
-import CardGenerator from "@/components/CardGenerator.vue";
-import CardIntro from "@/components/CardIntro.vue";
+import CardGenerator from "@/components/generator-page/CardGenerator.vue";
+import CardIntro from "@/components/generator-page/CardIntro.vue";
 
 export default {
   name: "PageBlock",
@@ -28,72 +17,35 @@ export default {
   },
   data: () => ({
     showIntro: true,
-    showGenerator: false,
-    showPage: false,
   }),
-  computed: {},
+  computed: {
+    component() {
+      return this.showIntro ? CardIntro : CardGenerator;
+    },
+  },
 };
 </script>
-<style lang="scss">
-.card-enter {
-  transform: translateX(-100%);
-  &-active {
-    position: absolute;
-    transition: all 0.3s linear;
-  }
+<style lang="scss" scoped>
+.page-block {
+  width: 100%;
+  margin-top: 48px;
 }
-.intro-leave {
+.page-block-leave {
   transform: translateX(100%);
   &-to {
     transform: translateX(-100%);
+    opacity: 0;
   }
   &-active {
     position: absolute;
-    transition: all 0.3s linear;
+    transition: all 0.3s ease-out;
   }
 }
-.intro-enter {
-  transform: translateX(-100%);
-  &-active {
-    position: absolute;
-    transition: all 0.3s linear;
-  }
-  &-to {
-    transform: translateX(0%);
-  }
-}
-.generator-leave {
-  &-to {
-    transform: translateX(100%);
-  }
-  &-active {
-    position: absolute;
-    transition: all 0.3s linear;
-  }
-}
-.generator-enter {
+.page-block-enter {
   transform: translateX(100%);
   &-active {
     position: absolute;
-    transition: all 0.3s linear;
-  }
-}
-.page-block {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  height: 100%;
-  width: 100%;
-  justify-content: center;
-  padding-top: 48px;
-}
-@media (max-width: 770px) {
-  .page-block {
-    height: 100%;
-    max-width: 320px;
-    display: flex;
-    flex-direction: column;
-    padding: 24px 8px 32px;
+    transition: all 0.3s ease-in;
   }
 }
 </style>

@@ -1,10 +1,10 @@
 <template>
   <div class="card-page">
     <CompanyCard
-      @setaccount="(e) => (this.bankAccount = e)"
+      @setaccount="(e) => (bankAccount = e)"
       @open="modalEmail = true"
     />
-    <OrderPage v-bind:bankAccount="bankAccount" />
+    <ContractTemplate :bankAccount="bankAccount" />
     <SendEmail
       v-if="modalEmail"
       @mailsent="modalEmail = false"
@@ -13,16 +13,16 @@
   </div>
 </template>
 <script>
-import CompanyCard from "@/components/CardPageComponents/CompanyCard.vue";
-import OrderPage from "@/components/CardPageComponents/OrderPage.vue";
-import SendEmail from "../components/SendEmail.vue";
+import CompanyCard from "@/components/card-page/company-info/CompanyInfo.vue";
+import ContractTemplate from "@/components/card-page/contract-template/ContractTemplate.vue";
+import SendEmail from "../components/card-page/SendEmail.vue";
 import { mapState } from "vuex";
 
 export default {
   name: "CardPage",
   components: {
     CompanyCard,
-    OrderPage,
+    ContractTemplate,
     SendEmail,
   },
   data: () => ({
@@ -37,7 +37,7 @@ export default {
   methods: {},
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .card-page {
   position: relative;
   height: 100%;

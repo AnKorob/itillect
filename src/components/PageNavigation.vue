@@ -3,14 +3,14 @@
     <router-link
       class="page-header-nav-link"
       :to="{ name: 'home' }"
-      v-show="this.searchCompany"
+      v-if="$route?.params.hash"
     >
       Сгенерировать новую карточку
     </router-link>
     <el-tabs
       v-model="tabHash"
       v-if="companiesTabs.length"
-      @tab-click="handleClick"
+      @tab-click="$router.push(`/bcard/${tabHash}`)"
     >
       <el-tab-pane
         v-for="tab in companiesTabs"
@@ -33,20 +33,18 @@ export default {
   },
   watch: {
     companiesTabs(tabs) {
+      // при добавлении автоматом выбираем последний
       this.tabHash = tabs.at(-1)?.hash;
     },
   },
   methods: {
     ...mapMutations({
-      setCompanyTab: "SET_COMPANY_TAB",
+      setCompanyTabs: "SET_COMPANY_TABS",
     }),
-    handleClick(tab, event) {
-      console.log(tab, event);
-      this.$router.push(`/bcard/${this.tabHash}`);
-    },
   },
   mounted() {
-    this.companiesTabs = JSON.parse(localStorage.getItem("usedTabs"));
+    this.setCompanyTabs();
+    this.$flashMessage();
   },
   beforeDestroy() {
     const tabs = JSON.stringify(this.companiesTabs);
@@ -58,7 +56,7 @@ export default {
 .page-header-nav {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   margin-top: 32px;
   width: 1110px;

@@ -93,6 +93,9 @@ export default new Vuex.Store({
     SET_COMPANY_TAB(state, tab) {
       state.companiesTabs.push(tab);
     },
+    SET_COMPANY_TABS(state) {
+      state.companiesTabs = JSON.parse(localStorage.getItem("usedTabs"));
+    },
     SET_OPPOSITE_COMPANY(state, data) {
       const newObj = [
         {
@@ -183,7 +186,7 @@ export default new Vuex.Store({
         },
         {
           key: "full_registration_address",
-          label: "Полный Адрес регистрации",
+          label: "Полный адрес регистрации",
           value: company.data.address.unrestricted_value,
         },
       ];
@@ -231,18 +234,26 @@ export default new Vuex.Store({
   },
   actions: {
     getCompanyById({ commit }, companyId) {
-      axios
-        .post("https://itillect.ru/bcard-ajax/", {
-          action: "bcard:company:search",
-          inn: companyId,
-        })
-        .then((response) => {
-          console.log(response.data);
-          commit("SET_COMPANY", [
-            response.data.data.company.suggestions[0],
-            response.data.data.hash,
-          ]);
-        });
+      return new Promise((resolve, reject) => {
+        axios
+          .post("https://itillect.ru/bcard-ajax/", {
+            action: "bcard:company:search",
+            inn: companyId,
+          })
+          .then((response) => {
+            console.log(response.data);
+            if (response.data.result === "error")
+              throw new Error(response.data.data.message);
+            commit("SET_COMPANY", [
+              response.data.data.company.suggestions[0],
+              response.data.data.hash,
+            ]);
+            resolve();
+          })
+          .catch((e) => {
+            reject(e);
+          });
+      });
     },
     getOppositeCompanyById({ commit }, oppositeCompanyId) {
       axios

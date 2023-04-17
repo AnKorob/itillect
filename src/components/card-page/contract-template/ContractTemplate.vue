@@ -75,12 +75,12 @@
       </div>
     </div>
     <RequisitesSettings
-      @reverse="(e) => (this.isCustomer = e)"
       v-model="isCustomer"
       v-bind:oppositeAccount="oppositeBankAccount"
-      @findagent="(e) => (this.isIndividual = e)"
+      @reverse="(e) => (this.isCustomer = e)"
+      @find-agent="(e) => (this.isIndividual = e)"
       @person="(e) => (this.person = e)"
-      @oppositeaccount="(e) => (this.oppositeBankAccount = e)"
+      @opposite-account="(e) => (this.oppositeBankAccount = e)"
     />
   </div>
 </template>
@@ -295,7 +295,7 @@ export default {
 </script>
 <style lang="scss">
 .order {
-  height: 100%;
+  height: 800px;
   display: flex;
   flex-direction: row;
   &-pattern {

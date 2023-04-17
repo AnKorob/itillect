@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="224px" height="224px" viewBox="0 0 224 224" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+export default `<svg width="36px" height="36px" viewBox="0 0 224 224" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <g id="Page-1" stroke="none" stroke-width="1" fill="#333333" fill-rule="evenodd">
         <g id="Logo---itillect" transform="translate(-3.000000, -4.000000)"  fill-rule="nonzero">
             <g id="logo_itillect" transform="translate(0.000000, 1.000000)">
@@ -10,4 +9,4 @@
             </g>
         </g>
     </g>
-</svg>
+</svg>`;

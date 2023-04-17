@@ -1,6 +1,6 @@
 <template>
   <div class="card-intro">
-    <div class="card-intro-text">
+    <div class="card-intro-block">
       <h1>
         Удобная<br />
         онлайн карточка <br />
@@ -21,12 +21,16 @@
         Открытый доступ к карточке без интернета с мобильного телефона.
         Сохраните на мобильном HomeScreen.
       </p>
-      <el-button type="primary" @click="$emit('toggle')">
+      <el-button
+        type="primary"
+        class="card-intro-block-action"
+        @click="$emit('toggle')"
+      >
         Сгенерировать карточку
       </el-button>
     </div>
-    <div class="card-intro-text">
-      <div class="card-intro-text-img">
+    <div class="card-intro-block">
+      <div class="card-intro-block-img">
         <img src="@/assets/bcard-logo.svg" />
       </div>
       <p>Не требует регистрации и предоставляется - БЕСПЛАТНО</p>
@@ -37,28 +41,20 @@
 <script>
 export default {
   name: "CardIntro",
-  data: () => ({}),
-  methods: {},
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .card-intro {
-  height: 100%;
-  width: 100%;
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  &-text {
-    width: 564px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    max-width: 45%;
-    & > .el-button {
+
+  &-block {
+    flex: 1;
+
+    & > &-action {
       font-size: 16px;
       font-weight: 600;
     }
+
     & > h1 {
       font-weight: 500;
       font-size: 48px;
@@ -73,6 +69,7 @@ export default {
     }
     & > ul {
       margin-bottom: 30px;
+
       & > li {
         display: inline;
         margin-right: 20px;
@@ -89,7 +86,7 @@ export default {
           display: block;
           position: absolute;
           top: 50%;
-          right: -10px;
+          right: -12px;
           transform: translate(0, -50%);
         }
       }
@@ -124,39 +121,5 @@ export default {
       }
     }
   }
-}
-@media (max-width: 770px) {
-  .card-intro {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    &-text {
-      max-width: 100%;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      & > h1 {
-        width: 100%;
-        font-size: 32px;
-      }
-      & > p {
-        margin-bottom: 0px;
-      }
-      &-img {
-        & > img {
-          display: none;
-        }
-      }
-    }
-  }
-  // .action-button {
-  //   width: 100%;
-  //   margin-top: 32px;
-  //   margin-bottom: 32px;
-  // }
 }
 </style>
