@@ -1,9 +1,16 @@
 <template>
-  <div class="page-header-nav">
+  <div
+    :class="[
+      'page-header-nav',
+      {
+        'page-header-nav-one': !$route.params.hash,
+      },
+    ]"
+  >
     <router-link
       class="page-header-nav-link"
       :to="{ name: 'home' }"
-      v-show="$route.params.hash"
+      v-if="$route.params.hash"
     >
       Сгенерировать новую карточку
     </router-link>
@@ -34,7 +41,7 @@ export default {
   watch: {
     companiesTabs(tabs) {
       // при добавлении автоматом выбираем последний
-      this.tabHash = tabs.at(-1)?.hash;
+      if (this.$route.params.hash) this.tabHash = tabs.at(-1)?.hash;
     },
   },
   methods: {
@@ -44,10 +51,6 @@ export default {
   },
   mounted() {
     this.setCompanyTabs();
-  },
-  beforeDestroy() {
-    const tabs = JSON.stringify(this.companiesTabs);
-    localStorage.setItem("usedTabs", tabs);
   },
 };
 </script>
@@ -61,6 +64,11 @@ export default {
   width: 1110px;
   height: 34px;
   color: #959595;
+
+  &-one {
+    justify-content: flex-end;
+  }
+
   & > .el-tabs {
     display: flex;
     justify-items: flex-end;

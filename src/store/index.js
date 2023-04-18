@@ -91,10 +91,16 @@ export default new Vuex.Store({
   getters: {},
   mutations: {
     SET_COMPANY_TAB(state, tab) {
-      state.companiesTabs.push(tab);
+      const isExist = state.companiesTabs.find(
+        (cTab) => cTab.hash === tab.hash
+      );
+      if (!isExist) {
+        state.companiesTabs.push(tab);
+        localStorage.setItem("usedTabs", JSON.stringify(state.companiesTabs));
+      }
     },
     SET_COMPANY_TABS(state) {
-      state.companiesTabs = JSON.parse(localStorage.getItem("usedTabs"));
+      state.companiesTabs = JSON.parse(localStorage.getItem("usedTabs")) ?? [];
     },
     SET_OPPOSITE_COMPANY(state, data) {
       const newObj = [
@@ -266,6 +272,8 @@ export default new Vuex.Store({
             console.log(response.data);
             if (response.data.result === "error")
               throw new Error(response.data.data.message);
+            if (!response.data.data.company.suggestions?.length)
+              throw new Error("Что-то пошло не так");
             commit("SET_COMPANY", [
               response.data.data.company.suggestions[0],
               response.data.data.hash,
