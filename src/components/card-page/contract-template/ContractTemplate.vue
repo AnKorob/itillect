@@ -23,53 +23,136 @@
         </div>
         <div class="order-pattern-block-card" :class="{ reverse: isCustomer }">
           <div class="order-pattern-block-card-agent">
-            <div class="block-header" v-if="!isIndividual">
+            <div class="block-header" v-if="isCompany">
               {{ oppositeCompany[1].value }}
             </div>
-            <div v-if="!isIndividual">
-              <p>
-                {{ oppositeCompany[6].value }}
-              </p>
-              <p>ИНН: {{ oppositeCompany[3].value }}</p>
-              <p>КПП: {{ oppositeCompany[4].value }}</p>
-              <p>ОГРН: {{ oppositeCompany[5].value }}</p>
-
-              <p>р/с {{ oppositeBankAccount }} в {{ oppositeBank[0].value }}</p>
-              <p>к/с {{ oppositeBank[1].value }}</p>
-              <p>БИК: {{ oppositeBank[2].value }}</p>
-              <p>Генеральный Директор</p>
-              <p>{{ oppositeCompany[1].value }}</p>
-              <p>{{ oppositeCompany[2].value }}</p>
+            <div v-if="isCompany">
+              <br />
+              <el-row>
+                <el-col>{{ oppositeCompany[6].value }}</el-col>
+              </el-row>
+              <br />
+              <el-row>
+                <el-col>ИНН:{{ oppositeCompany[3].value }}</el-col>
+              </el-row>
+              <el-row>
+                <el-col>КПП:{{ oppositeCompany[4].value }}</el-col>
+              </el-row>
+              <el-row>
+                <el-col>ОГРН:{{ oppositeCompany[5].value }}</el-col>
+              </el-row>
+              <br />
+              <el-row>
+                <el-col
+                  >р/с {{ oppositeBankAccount }} в {{ oppositeBank[0].value }}
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col>к/с{{ oppositeBank[1].value }}</el-col>
+              </el-row>
+              <el-row>
+                <el-col>БИК: {{ oppositeBank[2].value }}</el-col>
+              </el-row>
+              <br />
+              <el-row>
+                <el-col>Генеральный Директор</el-col>
+              </el-row>
+              <el-row>
+                <el-col>{{ oppositeCompany[1].value }}</el-col>
+              </el-row>
+              <br />
+              <el-row>
+                {{
+                  oppositeCompany[2].value
+                    .split(/\s+/)
+                    .map((w, i) =>
+                      i ? w.substring(0, 1).toUpperCase() + "." : w
+                    )
+                    .join(" ")
+                }}
+              </el-row>
             </div>
             <div v-else>
               <div class="block-header">
-                <p>{{ person.fio }}</p>
+                {{ passport.name }}
               </div>
-              <div>
-                <p>Паспорт: {{ person.passport }}</p>
-                <p>Выдан: {{ person.whomPassport }}</p>
-                <p>Дата выдачи: {{ person.whenPassport }}</p>
-                <p>Код подразделения: {{ person.idPassport }}</p>
-                <p>Частное лицо</p>
-                <p>Иванов И.И.</p>
-              </div>
+              <br />
+              <el-row>
+                <el-col>Паспорт:{{ passport.number }}</el-col>
+              </el-row>
+              <br />
+              <el-row>
+                <el-col>Выдан:{{ passport.authority }}</el-col>
+              </el-row>
+              <el-row>
+                <el-col>Дата выдачи:{{ passport.date }}</el-col>
+              </el-row>
+              <el-row>
+                <el-col>Код подразделения:{{ passport.subdivision }}</el-col>
+              </el-row>
+              <br /><br /><br /><br /><br />
+              <el-row>
+                <el-col>Частное лицо</el-col>
+              </el-row>
+              <br /><br />
+              <el-row>
+                {{
+                  passport.name
+                    .split(/\s+/)
+                    .map((w, i) =>
+                      i ? w.substring(0, 1).toUpperCase() + "." : w
+                    )
+                    .join(" ")
+                }}
+              </el-row>
             </div>
           </div>
           <div class="order-pattern-block-card-agent">
             <div class="block-header">{{ searchCompany.info[1].value }}</div>
-
-            <p>
-              {{ searchCompany.info[6].value }}
-            </p>
-            <p>ИНН: {{ searchCompany.info[3].value }}</p>
-            <p>КПП: {{ searchCompany.info[4].value }}</p>
-            <p>ОГРН: {{ searchCompany.info[5].value }}</p>
-            <p>р/с {{ this.bankAccount }} в {{ companyBank[0].value }}</p>
-            <p>к/с {{ companyBank[1].value }}</p>
-            <p>БИК: {{ companyBank[2].value }}</p>
-            <p>Генеральный Директор</p>
-            <p>{{ searchCompany.info[1].value }}</p>
-            <p>{{ searchCompany.info[2].value }}</p>
+            <div>
+              <br />
+              <el-row>
+                <el-col>{{ searchCompany.info[6].value }}</el-col>
+              </el-row>
+              <br />
+              <el-row>
+                <el-col>ИНН:{{ searchCompany.info[3].value }}</el-col>
+              </el-row>
+              <el-row>
+                <el-col>КПП:{{ searchCompany.info[4].value }}</el-col>
+              </el-row>
+              <el-row>
+                <el-col>ОГРН:{{ searchCompany.info[5].value }}</el-col>
+              </el-row>
+              <br />
+              <el-row>
+                <el-col
+                  >р/с {{ this.bankAccount }} в {{ companyBank[0].value }}
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col>к/с {{ companyBank[1].value }}</el-col>
+              </el-row>
+              <el-row>
+                <el-col>БИК:{{ companyBank[2].value }}</el-col>
+              </el-row>
+              <br />
+              <el-row><el-col>Генеральный Директор</el-col></el-row>
+              <el-row>
+                <el-col>{{ searchCompany.info[1].value }}</el-col>
+              </el-row>
+              <br />
+              <el-row>
+                {{
+                  searchCompany.info[2].value
+                    .split(/\s+/)
+                    .map((w, i) =>
+                      i ? w.substring(0, 1).toUpperCase() + "." : w
+                    )
+                    .join(" ")
+                }}
+              </el-row>
+            </div>
           </div>
         </div>
       </div>
@@ -78,8 +161,8 @@
       v-model="isCustomer"
       v-bind:oppositeAccount="oppositeBankAccount"
       @reverse="(e) => (this.isCustomer = e)"
-      @find-agent="(e) => (this.isIndividual = e)"
-      @person="(e) => (this.person = e)"
+      @find-agent="(e) => (this.isCompany = e)"
+      @passport="(e) => (this.passport = e)"
       @opposite-account="(e) => (this.oppositeBankAccount = e)"
     />
   </div>
@@ -94,9 +177,9 @@ export default {
     RequisitesSettings,
   },
   data: () => ({
-    isCustomer: false,
-    isIndividual: false,
-    person: "",
+    isCustomer: true,
+    isCompany: true,
+    passport: "",
     oppositeBankAccount: "",
     oppositeBik: "",
     message: "",
@@ -112,13 +195,14 @@ export default {
       "oppositeBank",
       "companyBank",
     ]),
+
     // agent() {
     //   return document.getElementsByClassName("order-pattern-block-card")[0];
     // },
   },
   updated() {
-    if (this.isCustomer) {
-      if (this.isIndividual) {
+    if (!this.isCustomer) {
+      if (!this.isCompany) {
         this.message = `${
           this.searchCompany.info[1].value
         }, именуемое в дальнейшем "Заказчик", ${
@@ -127,19 +211,19 @@ export default {
       стороны,и ${
         "частное лицо" +
         " " +
-        this.person.fio +
+        this.passport.name +
         " " +
-        this.person.passport +
+        this.passport.number +
         " " +
         "выдан" +
         " " +
-        this.person.whomPassport +
+        this.passport.authority +
         " " +
-        this.person.whenPassport +
+        this.passport.date +
         " " +
         "код подразделения:" +
         " " +
-        this.person.idPassport
+        this.passport.subdivision
       }, именуемое в дальнейшем "Исполнитель", с другой стороны, совместно именуемые «Стороны», а по
        отдельности «Сторона», заключили настоящий Договор о нижеследующем:`;
       } else {
@@ -159,23 +243,23 @@ export default {
        отдельности «Сторона», заключили настоящий Договор о нижеследующем:`;
       }
     } else {
-      if (this.isIndividual) {
+      if (!this.isCompany) {
         this.message = `${
           "Частное лицо" +
           " " +
-          this.person.fio +
+          this.passport.name +
           " " +
-          this.person.passport +
+          this.passport.number +
           " " +
           "выдан" +
           " " +
-          this.person.whomPassport +
+          this.passport.authority +
           " " +
-          this.person.whenPassport +
+          this.passport.date +
           " " +
           "код подразделения:" +
           " " +
-          this.person.idPassport
+          this.passport.subdivision
         }, именуемое в дальнейшем "Заказчик", с одной
       стороны,и ${
         this.searchCompany.info[1].value
@@ -201,8 +285,8 @@ export default {
     }
   },
   mounted() {
-    if (this.isCustomer) {
-      if (this.isIndividual) {
+    if (!this.isCustomer) {
+      if (!this.isCompany) {
         this.message = `${
           this.searchCompany.info[1].value
         }, именуемое в дальнейшем "Заказчик", ${
@@ -211,19 +295,19 @@ export default {
       стороны,и ${
         "частное лицо" +
         " " +
-        this.person.fio +
+        this.passport.name +
         " " +
-        this.person.passport +
+        this.passport.number +
         " " +
         "выдан" +
         " " +
-        this.person.whomPassport +
+        this.passport.authority +
         " " +
-        this.person.whenPassport +
+        this.passport.date +
         " " +
         "код подразделения:" +
         " " +
-        this.person.idPassport
+        this.passport.subdivision
       }, именуемое в дальнейшем "Исполнитель", с другой стороны, совместно именуемые «Стороны», а по
        отдельности «Сторона», заключили настоящий Договор о нижеследующем:`;
       } else {
@@ -243,23 +327,23 @@ export default {
        отдельности «Сторона», заключили настоящий Договор о нижеследующем:`;
       }
     } else {
-      if (this.isIndividual) {
+      if (!this.isCompany) {
         this.message = `${
           "Частное лицо" +
           " " +
-          this.person.fio +
+          this.passport.name +
           " " +
-          this.person.passport +
+          this.passport.number +
           " " +
           "выдан" +
           " " +
-          this.person.whomPassport +
+          this.passport.authority +
           " " +
-          this.person.whenPassport +
+          this.passport.date +
           " " +
           "код подразделения:" +
           " " +
-          this.person.idPassport
+          this.passport.subdivision
         }, именуемое в дальнейшем "Заказчик", с одной
       стороны,и ${
         this.searchCompany.info[1].value
@@ -330,12 +414,11 @@ export default {
         flex-direction: row;
         justify-content: space-between;
 
-        align-items: center;
         &-agent {
           text-align: justify;
           display: flex;
           flex-direction: column;
-          max-width: 400px;
+          width: calc(50% - 20px);
           font-weight: 300;
           font-size: 14px;
           border-bottom: 1px solid #000;
@@ -364,6 +447,9 @@ export default {
 .reverse {
   display: flex;
   flex-direction: row-reverse;
+}
+.order-pattern-block-card-agent > div:nth-child(2n) > .el-row:last-of-type {
+  float: right;
 }
 @media (max-width: 770px) {
   .order {

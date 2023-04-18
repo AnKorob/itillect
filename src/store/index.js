@@ -233,6 +233,28 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    // openTab({ commit }, hash) {
+    //   return new Promise((resolve, reject) => {
+    //     axios
+    //       .post("https://itillect.ru/bcard-ajax/", {
+    //         action: "bcard:company",
+    //         hash: companiesTabs.tabHash,
+    //       })
+    //       .then((response) => {
+    //         console.log(response.data);
+    //         if (response.data.result === "error")
+    //           throw new Error(response.data.data.message);
+    //         commit("SET_COMPANY", [
+    //           response.data.data.company.suggestions[0],
+    //           response.data.data.hash,
+    //         ]);
+    //         resolve();
+    //       })
+    //       .catch((e) => {
+    //         reject(e);
+    //       });
+    //   });
+    // },
     getCompanyById({ commit }, companyId) {
       return new Promise((resolve, reject) => {
         axios

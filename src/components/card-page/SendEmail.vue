@@ -66,6 +66,9 @@ export default {
     width: 100%;
     margin-bottom: 46px;
     margin-top: 32px;
+    & > button {
+      border-radius: 0 6px 6px 0;
+    }
     & > input {
       border: 1px solid #a9a9a9;
       border-top-left-radius: 6px;
@@ -105,6 +108,13 @@ export default {
     background-color: dodgerblue;
     justify-content: center;
     align-items: center;
+  }
+}
+.card-generator::v-deep {
+  input {
+    height: 56px;
+    border-radius: 6px 0px 0px 6px;
+    font-size: 24px;
   }
 }
 @media (max-width: 770px) {

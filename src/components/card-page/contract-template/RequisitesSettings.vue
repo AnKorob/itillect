@@ -103,8 +103,8 @@ export default {
     oppositeAccount: String,
   },
   data: () => ({
-    isCompany: false,
-    isCustomer: false,
+    isCompany: true,
+    isCustomer: true,
     oppositeBik: "",
     oppositeInn: "",
     oppositeBankAccount: "",
@@ -123,7 +123,7 @@ export default {
     ...mapState(["oppositeCompany", "oppositeBank", "searchCompany"]),
   },
   updated() {
-    this.$emit("person", this.person);
+    this.$emit("passport", this.passport);
   },
   methods: {
     ...mapActions({
@@ -145,7 +145,7 @@ export default {
       this.$emit("find-agent", this.isCompany);
     },
     getOppositeAccount() {
-      this.$emit("oppositeaccount", this.oppositeBankAccount);
+      this.$emit("opposite-account", this.oppositeBankAccount);
     },
     // checkInn() {
     //   this.isValid = this.companyInn && /^\d{10,12}$/.test(this.companyInn);

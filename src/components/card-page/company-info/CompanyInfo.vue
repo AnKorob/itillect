@@ -7,8 +7,12 @@
       <div class="company-card-header-button">
         <el-button class="type" plain>PDF</el-button>
         <el-button class="type" plain>DOCX</el-button>
-        <el-button class="type" plain @click="openEmail">Email</el-button>
-        <el-button class="type" plain @click="copyLink">Ссылка</el-button>
+        <el-button class="type" plain @click="openEmail">
+          Отправить на email
+        </el-button>
+        <el-button class="type" plain @click="$flashMessage(getMessage)"
+          >Получить ссылку</el-button
+        >
       </div>
     </div>
     <div class="company-card-info">
@@ -17,7 +21,7 @@
         v-for="field in searchCompany.info"
         :key="field.key"
       >
-        <el-col :span="6" :offset="1" class="company-card-info-block-option">
+        <el-col :span="6" class="company-card-info-block-option">
           {{ field.label }}
         </el-col>
         <el-col :span="14" class="company-card-info-block-value">
@@ -29,13 +33,10 @@
           </el-button>
         </el-col>
       </el-row>
-
       <div class="company-card-info-header">Банковские реквизиты</div>
       <el-row class="company-card-info-block">
-        <el-col :span="6" :offset="1" class="company-card-info-block-option">
-          СЧЕТ
-        </el-col>
-        <el-col :span="13" class="company-card-info-block-value">
+        <el-col :span="6" class="company-card-info-block-option"> СЧЕТ </el-col>
+        <el-col :span="14" class="company-card-info-block-value">
           <el-input
             placeholder="Please input"
             v-model="bankAccount"
@@ -46,17 +47,15 @@
             {{ bankAccount }}
           </el-input>
         </el-col>
-        <el-col :span="4"
-          ><el-button type="primary" class="copy" @click="copyText(bankAccount)"
-            >Копировать</el-button
-          ></el-col
-        >
+        <el-col :span="4">
+          <el-button type="primary" class="copy" @click="copyText(bankAccount)">
+            Копировать
+          </el-button>
+        </el-col>
       </el-row>
       <el-row class="company-card-info-block">
-        <el-col :span="6" :offset="1" class="company-card-info-block-option"
-          >БИК</el-col
-        >
-        <el-col :span="13" class="company-card-info-block-value">
+        <el-col :span="6" class="company-card-info-block-option"> БИК </el-col>
+        <el-col :span="14" class="company-card-info-block-value">
           <el-input
             placeholder="Please input"
             v-model="companyBik"
@@ -68,29 +67,28 @@
             >{{ companyBik }}</el-input
           >
         </el-col>
-        <el-col :span="4"
-          ><el-button type="primary" class="copy" @click="copyText(companyBik)"
-            >Копировать</el-button
-          ></el-col
-        >
+        <el-col :span="4">
+          <el-button type="primary" class="copy" @click="copyText(companyBik)">
+            Копировать
+          </el-button>
+        </el-col>
       </el-row>
-
       <el-row
         class="company-card-info-block"
         v-for="field in companyBank"
         :key="field.key"
       >
-        <el-col :span="6" :offset="1" class="company-card-info-block-option">{{
-          field.label
-        }}</el-col>
-        <el-col :span="13" class="company-card-info-block-value">{{
-          field.value
-        }}</el-col>
-        <el-col :span="4"
-          ><el-button type="primary" class="copy" @click="copyText(field.value)"
-            >Копировать</el-button
-          ></el-col
-        >
+        <el-col :span="6" class="company-card-info-block-option">
+          {{ field.label }}
+        </el-col>
+        <el-col :span="14" class="company-card-info-block-value">
+          {{ field.value }}
+        </el-col>
+        <el-col :span="4">
+          <el-button type="primary" class="copy" @click="copyText(field.value)">
+            Копировать
+          </el-button>
+        </el-col>
       </el-row>
     </div>
   </div>
@@ -102,10 +100,18 @@ export default {
   data: () => ({
     companyBik: "",
     bankAccount: "",
+    message: "",
   }),
   props: {
     value: String,
   },
+  // directives: {
+  //   copy: {
+  //     bind: function (el) {
+  //       el.copy();
+  //     },
+  //   },
+  // },
   methods: {
     ...mapActions({
       getBankByBik: "getBankByBik",
@@ -129,6 +135,9 @@ export default {
   },
   computed: {
     ...mapState(["companyBank", "searchCompany", "companiesTabs"]),
+    getMessage() {
+      return window.location.href;
+    },
   },
   mounted() {
     this.bankAccount = this.value;
@@ -210,13 +219,13 @@ export default {
           }
         }
       }
-
       & > .copy--visible {
         width: 48px;
       }
 
       &-option {
         height: 100%;
+        padding: 10px;
         display: flex;
         color: #666666;
         justify-content: flex-start;
@@ -235,14 +244,16 @@ export default {
     }
   }
 }
-
 .company-card::v-deep {
   .el-input {
     min-height: 36px;
   }
 }
 .copy {
+  position: relative;
   float: right;
+  transform: translateY(50%);
+  align-self: center;
   padding: 0 24px;
   opacity: 0;
   width: 96px;

@@ -3,7 +3,7 @@
     <router-link
       class="page-header-nav-link"
       :to="{ name: 'home' }"
-      v-if="$route?.params.hash"
+      v-show="$route.params.hash"
     >
       Сгенерировать новую карточку
     </router-link>
@@ -44,7 +44,6 @@ export default {
   },
   mounted() {
     this.setCompanyTabs();
-    this.$flashMessage();
   },
   beforeDestroy() {
     const tabs = JSON.stringify(this.companiesTabs);
@@ -56,18 +55,24 @@ export default {
 .page-header-nav {
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   margin-top: 32px;
   width: 1110px;
   height: 34px;
   color: #959595;
+  & > .el-tabs {
+    display: flex;
+    justify-items: flex-end;
+  }
 
   &-link {
     text-decoration: none;
     color: #959595;
     cursor: pointer;
-    width: 1110px;
+    display: flex;
+
+    width: auto;
     height: 100%;
 
     &:hover {
