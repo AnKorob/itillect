@@ -74,21 +74,29 @@
             </div>
             <div v-else>
               <div class="block-header">
-                {{ passport.name }}
+                {{ passport.name || "Иванов Иван Иванович" }}
               </div>
               <br />
               <el-row>
-                <el-col>Паспорт:{{ passport.number }}</el-col>
+                <el-col>Паспорт:{{ passport.number || "6666 000001" }}</el-col>
               </el-row>
               <br />
               <el-row>
-                <el-col>Выдан:{{ passport.authority }}</el-col>
+                <el-col
+                  >Выдан:{{
+                    passport.authority || "отделом ОУФМС России по г.Москва"
+                  }}</el-col
+                >
               </el-row>
               <el-row>
-                <el-col>Дата выдачи:{{ passport.date }}</el-col>
+                <el-col>Дата выдачи:{{ passport.date || "10.11.2012" }}</el-col>
               </el-row>
               <el-row>
-                <el-col>Код подразделения:{{ passport.subdivision }}</el-col>
+                <el-col
+                  >Код подразделения:{{
+                    passport.subdivision || "100-500"
+                  }}</el-col
+                >
               </el-row>
               <br /><br /><br /><br /><br />
               <el-row>
@@ -97,7 +105,7 @@
               <br /><br />
               <el-row>
                 {{
-                  passport.name
+                  (passport.name || "Иванов Иван Иванович")
                     .split(/\s+/)
                     .map((w, i) =>
                       i ? w.substring(0, 1).toUpperCase() + "." : w
@@ -293,21 +301,20 @@ export default {
           "в лице генерального директора " + this.searchCompany.info[2].value
         } с одной
       стороны,и ${
-        "частное лицо" +
-        " " +
-        this.passport.name +
-        " " +
-        this.passport.number +
-        " " +
-        "выдан" +
-        " " +
-        this.passport.authority +
-        " " +
-        this.passport.date +
-        " " +
-        "код подразделения:" +
-        " " +
-        this.passport.subdivision
+        "частное лицо" + " " + this.passport.name ||
+        "Иванов Иван Иванович" +
+          " " +
+          this.passport.number +
+          " " +
+          "выдан" +
+          " " +
+          this.passport.authority +
+          " " +
+          this.passport.date +
+          " " +
+          "код подразделения:" +
+          " " +
+          this.passport.subdivision
       }, именуемое в дальнейшем "Исполнитель", с другой стороны, совместно именуемые «Стороны», а по
        отдельности «Сторона», заключили настоящий Договор о нижеследующем:`;
       } else {

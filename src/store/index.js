@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
+import testModule from "./test/module";
 
 Vue.use(Vuex);
 
@@ -261,6 +262,20 @@ export default new Vuex.Store({
     //       });
     //   });
     // },
+
+    // getUserTodos({ commit }, id) {
+    //   fetch(`https://jsonplaceholder.typicode.com/users/${id}/todos/`)
+    //     .then((response) => response.json())
+    //     .then((todos) => {
+    //       commit("SET_TODOS", todos);
+    //     });
+    //   fetch(`https://jsonplaceholder.typicode.com/users/${id}`)
+    //     .then((response) => response.json())
+    //     .then((userMail) => {
+    //       commit("SET_MAIL", userMail);
+    //     });
+    // },
+
     getCompanyById({ commit }, companyId) {
       return new Promise((resolve, reject) => {
         axios
@@ -319,5 +334,7 @@ export default new Vuex.Store({
         });
     },
   },
-  modules: {},
+  modules: {
+    test: testModule,
+  },
 });

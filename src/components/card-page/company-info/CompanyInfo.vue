@@ -62,7 +62,6 @@
             type="number"
             minlength="9"
             maxlength="9"
-            @focus="companyBik = ''"
             @input="getBank"
             >{{ companyBik }}</el-input
           >
