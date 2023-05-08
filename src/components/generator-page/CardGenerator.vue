@@ -6,27 +6,19 @@
     element-loading-background="rgb(247 248 249 / 80%)"
   >
     <h3 class="card-generator-title">Введите ИНН организации</h3>
-    <div class="card-generator-finder">
-      <el-input
-        class="card-generator-finder-input"
-        placeholder="Пример: 7723615168"
-        v-model="companyInnComputed"
-        type="number"
-      />
-      <el-button
-        type="primary"
-        class="card-generator-finder-search"
-        :disabled="!isValid"
-        @click="getCompanyByINN"
-      >
-        Найти
-      </el-button>
-    </div>
+    <ActionField
+      v-model="companyInn"
+      type="number"
+      label="Найти"
+      rule="inn"
+      placeholder="Пример: 7723615168"
+      @action="getCompanyByINN"
+    />
     <div
       class="card-generator-info"
       v-if="!isNewClient && getClientCompanyTableRows.length"
     >
-      <InfoBlock :generator="true" />
+      <CompanyInfoBlock />
       <el-button
         type="primary"
         class="card-generator-info-action"
@@ -44,28 +36,20 @@
 </template>
 <script>
 import { mapActions, mapState, mapGetters, mapMutations } from "vuex";
-import InfoBlock from "@/components/InfoBlock.vue";
+import CompanyInfoBlock from "@/components/CompanyInfoBlock.vue";
+import ActionField from "@/components/ActionField.vue";
+
 export default {
   name: "CardGenerator",
   data: () => ({
     companyInn: "",
-    isValid: false,
     isLoading: false,
     isNewClient: true,
   }),
-  components: { InfoBlock },
+  components: { CompanyInfoBlock, ActionField },
   computed: {
     ...mapState(["clientCompany"]),
     ...mapGetters(["getClientCompanyTableRows"]),
-    companyInnComputed: {
-      get() {
-        return this.companyInn;
-      },
-      set(v) {
-        this.isValid = v && /^\d{10,12}$/.test(v);
-        this.companyInn = v;
-      },
-    },
   },
 
   methods: {
@@ -88,9 +72,9 @@ export default {
         .then(() => {
           this.companyInnComputed = "";
         })
-        .catch((e) => {
+        .catch(() => {
           this.$message({
-            message: e,
+            message: "Компания с таким ИНН не найдена",
             type: "error",
           });
         })
@@ -112,24 +96,6 @@ export default {
     font-size: 44px;
     font-weight: 300;
   }
-  &-finder {
-    display: flex;
-    flex-direction: row;
-    height: 56px;
-    width: 100%;
-    margin-bottom: 46px;
-    margin-top: 32px;
-
-    &-search {
-      border-radius: 0px 6px 6px 0px;
-      font-weight: 600;
-      width: 150px;
-    }
-
-    &-input {
-      max-width: 600px;
-    }
-  }
 
   &-hint {
     color: #a9a9a9;
@@ -141,20 +107,12 @@ export default {
 
   &-info {
     & > &-action {
-      margin-top: 30px;
+      margin: 30px 0;
       justify-content: flex-start;
       width: 300px;
       font-size: 16px;
       font-weight: 600;
     }
-  }
-}
-
-.card-generator::v-deep {
-  input {
-    height: 56px;
-    border-radius: 6px 0px 0px 6px;
-    font-size: 24px;
   }
 }
 </style>

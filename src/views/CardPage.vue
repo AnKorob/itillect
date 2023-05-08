@@ -1,24 +1,22 @@
 <template>
   <div class="card-page" v-loading="isLoading">
     <template v-if="!isLoading">
-      <CompanyInfo
-        @setaccount="(e) => (this.bankAccount = e)"
-        v-bind:bankAccount="bankAccount"
-        @open="modalEmail = true"
+      <EmailForm
+        v-if="isOpenSendEmailBlock"
+        @mailsent="isOpenSendEmailBlock = false"
+        @close="isOpenSendEmailBlock = false"
       />
-      <ContractTemplate v-bind:bankAccount="bankAccount" />
-      <SendEmail
-        v-if="modalEmail"
-        @mailsent="modalEmail = false"
-        @close="modalEmail = false"
-      />
+      <template v-else>
+        <CompanyInfo @open-email-block="isOpenSendEmailBlock = true" />
+        <ContractTemplate />
+      </template>
     </template>
   </div>
 </template>
 <script>
 import CompanyInfo from "@/components/card-page/company-info/CompanyInfo.vue";
 import ContractTemplate from "@/components/card-page/contract-template/ContractTemplate.vue";
-import SendEmail from "@/components/card-page/SendEmail.vue";
+import EmailForm from "@/components/card-page/EmailForm.vue";
 import { mapState, mapActions } from "vuex";
 
 export default {
@@ -26,11 +24,10 @@ export default {
   components: {
     CompanyInfo,
     ContractTemplate,
-    SendEmail,
+    EmailForm,
   },
   data: () => ({
-    bankAccount: "",
-    modalEmail: "",
+    isOpenSendEmailBlock: "",
     isLoading: false,
   }),
   computed: {

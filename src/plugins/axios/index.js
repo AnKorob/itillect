@@ -4,7 +4,7 @@ import Vue from "vue";
 
 // import { Message } from "element-ui";
 
-const itillectURL = "https://itillect.ru/";
+const itillectURL = "https://itillect.ru/bcard-ajax";
 
 const $api = axios.create({
   baseURL: itillectURL,

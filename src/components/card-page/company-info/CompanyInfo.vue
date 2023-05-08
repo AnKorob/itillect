@@ -1,121 +1,33 @@
 <template>
   <div class="company-card">
     <div class="company-card-header">
-      <div class="company-card-header-name">
+      <h1 class="company-card-header__title">
         {{ clientCompany.short_name }}
-      </div>
-      <div class="company-card-header-button">
-        <ActionsBlock @open="openEmail" />
-      </div>
+      </h1>
+      <ActionsBlock @open-email-block="$emit('open-email-block')" />
     </div>
-    <div class="company-card-info">
-      <InfoBlock :generator="false" />
-      <div class="company-card-info-header">Банковские реквизиты</div>
-      <el-row class="company-card-info-block">
-        <el-col :span="6" class="company-card-info-block-option"> СЧЕТ </el-col>
-        <el-col :span="14" class="company-card-info-block-value">
-          <el-input
-            placeholder="Введите номер банковского счета"
-            v-model="bankAccount"
-            type="number"
-            @change="setAccount"
-            @focus="bankAccount = ''"
-          >
-            {{ bankAccount }}
-          </el-input>
-        </el-col>
-        <el-col :span="4">
-          <el-button type="primary" class="copy" @click="copyText(bankAccount)">
-            Копировать
-          </el-button>
-        </el-col>
-      </el-row>
-      <el-row class="company-card-info-block">
-        <el-col :span="6" class="company-card-info-block-option"> БИК </el-col>
-        <el-col :span="14" class="company-card-info-block-value">
-          <el-input
-            placeholder="Введите БИК"
-            v-model="companyBik"
-            type="number"
-            minlength="9"
-            maxlength="9"
-            @input="getBank"
-            >{{ companyBik }}</el-input
-          >
-        </el-col>
-        <el-col :span="4">
-          <el-button type="primary" class="copy" @click="copyText(companyBik)">
-            Копировать
-          </el-button>
-        </el-col>
-      </el-row>
-      <el-row
-        class="company-card-info-block"
-        v-for="field in getClientBankRows"
-        :key="field.key"
-      >
-        <el-col :span="6" class="company-card-info-block-option">
-          {{ field.label }}
-        </el-col>
-        <el-col :span="14" class="company-card-info-block-value">
-          {{ field.value }}
-        </el-col>
-        <el-col :span="4">
-          <el-button type="primary" class="copy" @click="copyText(field.value)">
-            Копировать
-          </el-button>
-        </el-col>
-      </el-row>
-    </div>
+    <CompanyInfoBlock card />
+    <BankInfoBlock />
   </div>
 </template>
 <script>
-import { mapState, mapGetters, mapActions } from "vuex";
+import { mapState } from "vuex";
 import ActionsBlock from "@/components/card-page/company-info/ActionsBlock.vue";
-import InfoBlock from "@/components/InfoBlock.vue";
+import CompanyInfoBlock from "@/components/CompanyInfoBlock.vue";
+import BankInfoBlock from "@/components/BankInfoBlock.vue";
+
 export default {
   name: "CompanyInfo",
-  data: () => ({
-    companyBik: "",
-    bankAccount: "",
-  }),
   components: {
     ActionsBlock,
-    InfoBlock,
+    CompanyInfoBlock,
+    BankInfoBlock,
   },
   props: {
     value: String,
   },
-  methods: {
-    ...mapActions({
-      getBankByBik: "getBankByBik",
-    }),
-    copyLink() {
-      navigator.clipboard.writeText(window.location.href);
-    },
-    copyText(text) {
-      this.$message("Скопировано");
-      navigator.clipboard.writeText(text);
-    },
-    openEmail() {
-      this.$emit("open");
-    },
-    getBank() {
-      if (/^\d{9}$/.test(this.companyBik)) this.getBankByBik(this.companyBik);
-    },
-    setAccount() {
-      this.$emit("setaccount", this.bankAccount);
-    },
-  },
   computed: {
-    ...mapState(["clientBank", "clientCompany", "companiesTabs"]),
-    ...mapGetters(["getClientCompanyTableRows", "getClientBankRows"]),
-    getMessage() {
-      return window.location.href;
-    },
-  },
-  mounted() {
-    this.bankAccount = this.value;
+    ...mapState(["clientCompany"]),
   },
 };
 </script>
@@ -136,151 +48,11 @@ export default {
     font-weight: 300;
     margin-bottom: 32px;
 
-    &-name {
+    &__title {
       display: flex;
       font-size: 48px;
       font-weight: 400;
     }
-
-    &-button {
-      display: flex;
-      cursor: pointer;
-    }
-  }
-
-  &-info {
-    display: flex;
-    height: 100%;
-    flex-direction: column;
-
-    &-header {
-      font-size: 20px;
-      margin-top: 32px;
-      margin-bottom: 32px;
-    }
-
-    &-block {
-      display: flex;
-      justify-content: center;
-      width: 100%;
-      flex-direction: row;
-      height: 100%;
-      margin: 0;
-      padding: 8px 0;
-      font-size: 16px;
-      text-align: justify;
-
-      &:hover {
-        background-color: #f5f5f5;
-        .copy {
-          padding: 0 24px;
-          opacity: 1;
-          margin-right: 10px;
-          width: 96px;
-          height: 22px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          &:hover {
-            opacity: 1;
-            padding: 4px 24px;
-            transition: 0.1s;
-            background-color: #03274e;
-            border: 1px solid #03274e;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          }
-        }
-      }
-      & > .copy--visible {
-        width: 48px;
-      }
-
-      &-option {
-        height: 100%;
-        padding: 10px;
-        display: flex;
-        color: #666666;
-        justify-content: flex-start;
-        align-items: center;
-        text-align: justify;
-        text-transform: uppercase;
-      }
-      &-value {
-        display: flex;
-        align-items: center;
-        padding: 0 12px;
-        text-align: justify;
-        font-weight: 500;
-        text-transform: uppercase;
-      }
-    }
-  }
-}
-.company-card::v-deep {
-  .el-input {
-    min-height: 36px;
-  }
-}
-.copy {
-  position: relative;
-  float: right;
-  transform: translateY(50%);
-  align-self: center;
-  padding: 0 24px;
-  opacity: 0;
-  width: 96px;
-  height: 22px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-@media (max-width: 770px) {
-  .company-card {
-    &-header {
-      flex-direction: column-reverse;
-      &-button {
-        width: 100%;
-        justify-content: space-around;
-        align-items: center;
-        flex-wrap: wrap;
-      }
-    }
-    &-info {
-      &-block {
-        position: relative;
-        flex-direction: column;
-        width: 100%;
-        &-option,
-        &-value {
-          width: 100%;
-          align-items: flex-start;
-          padding: 0;
-        }
-      }
-    }
-  }
-  .copy {
-    position: absolute;
-    width: 32px;
-    height: 16px !important;
-    font-size: 12px !important;
-    margin: 0;
-    top: 0px;
-    right: 0px;
-    &:hover {
-      width: 32px;
-      height: 16px !important;
-      font-size: 12px !important;
-      padding-top: 1px !important;
-      margin: 0;
-      top: 0px;
-      right: 0px;
-    }
-  }
-  .type {
-    width: 120px;
   }
 }
 </style>

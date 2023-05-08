@@ -1,6 +1,5 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import axios from "axios";
 
 Vue.use(Vuex);
 
@@ -20,29 +19,46 @@ export default new Vuex.Store({
       type: "LEGAL",
     },
     oppositeBank: {
-      name: "МясГазПромБанк",
+      name: "Банк джедаев",
       correspondent_account: "11223344556677889900",
       bik: "123456789",
+      account: "",
     },
     clientBank: {
       name: "",
       correspondent_account: "",
       bik: "",
+      account: "",
     },
     companiesTabs: [],
   },
   getters: {
     getClientBankRows: (state) => {
       if (!state.clientBank) return [];
+
       return [
         {
-          key: "bank_Name",
+          key: "account",
+          label: "Счет",
+          input: {
+            placeholder: "Введите номер банковского счета",
+          },
+        },
+        {
+          key: "bik",
+          label: "БИК",
+          input: {
+            placeholder: "Введите БИК",
+          },
+        },
+        {
+          key: "bank_name",
           label: "Наименование Банка",
           value: state.clientBank.name,
         },
         {
-          key: "korr_Account",
-          label: "Корр Счет",
+          key: "korr_account",
+          label: "Корр. счет",
           value: state.clientBank.correspondent_account,
         },
       ];
@@ -110,8 +126,10 @@ export default new Vuex.Store({
       state.oppositeCompany = {
         full_name: company.data.name.full_with_opf,
         short_name: company.value,
-        manager: company.data.management?.post,
-        ceo: company.data.management?.name,
+        manager:
+          company.data.management?.post?.[0].toUpperCase() +
+          company.data.management?.post?.slice(1).toLowerCase(),
+        ceo: company.data.management?.name || company.data.name.full,
         inn: company.data.inn,
         kpp: company.data.kpp,
         ogrn: company.data.ogrn,
@@ -125,8 +143,10 @@ export default new Vuex.Store({
         hash,
         full_name: company.data.name.full_with_opf,
         short_name: company.value,
-        manager: company.data.management?.post,
-        ceo: company.data.management?.name,
+        manager:
+          company.data.management?.post?.[0].toUpperCase() +
+          company.data.management?.post?.slice(1).toLowerCase(),
+        ceo: company.data.management?.name || company.data.name.full,
         inn: company.data.inn,
         kpp: company.data.kpp,
         ogrn: company.data.ogrn,
@@ -136,34 +156,55 @@ export default new Vuex.Store({
       };
     },
     SET_CLIENT_BANK(state, data) {
-      state.clientBank = {
-        name: data.data.data.bank.suggestions[0].data.name.short,
-        correspondent_account:
-          data.data.data.bank.suggestions[0].data.correspondent_account,
-        bik: data.data.data.bank.suggestions[0].data.bic,
-      };
+      state.clientBank.name = data.data.name.short;
+      state.clientBank.correspondent_account = data.data.correspondent_account;
+      state.clientBank.bik = data.data.bic;
+    },
+
+    SET_CLIENT_BANK_ACCOUNT(state, account) {
+      state.clientBank.account = account;
+    },
+    SET_OPPOSITE_BANK_ACCOUNT(state, account) {
+      state.oppositeBank.account = account;
     },
 
     SET_OPPOSITE_BANK(state, data) {
-      state.oppositeBank = {
-        name: data.data.data.bank.suggestions[0].data.name.short,
-        correspondent_account:
-          data.data.data.bank.suggestions[0].data.correspondent_account,
-        bik: data.data.data.bank.suggestions[0].data.bic,
+      state.oppositeBank.name = data.data.name.short;
+      state.oppositeBank.correspondent_account =
+        data.data.correspondent_account;
+      state.oppositeBank.bik = data.data.bic;
+    },
+
+    CLEAR_OPPOSITE_COMPANY(state) {
+      state.oppositeCompany = {
+        full_name: "Общество с ограниченной ответственностью 'Рога и Копыта'",
+        short_name: 'ООО "Рога и Копыта"',
+        manager: "Ген. директор",
+        ceo: "Сергеев Сергей Сергеевич",
+        inn: "6601234567",
+        kpp: "660123456",
+        ogrn: "1234567890123",
+        address: "г.Москва ул.Пушкина д.1",
+        full_address: "г.Москва ул.Пушкина д.1 п.123",
+        type: "LEGAL",
       };
+    },
+    CLEAR_OPPOSITE_BANK(state) {
+      state.oppositeBank.name = "Банк джедаев";
+      state.oppositeBank.correspondent_account = "11223344556677889900";
+      state.oppositeBank.bik = "123456789";
     },
   },
 
   actions: {
     fetchCompanyByHash({ commit }, hash) {
       return new Promise((resolve, reject) => {
-        axios
-          .post("https://itillect.ru/bcard-ajax/", {
+        this._vm.$api
+          .post("/", {
             action: "bcard:company",
             hash: `${hash}`,
           })
           .then((response) => {
-            console.log(response.data);
             if (response.data.result === "error")
               throw new Error(response.data.data.message);
             if (!response.data.data.company.suggestions?.length)
@@ -181,13 +222,12 @@ export default new Vuex.Store({
     },
     getCompanyByInn({ commit }, companyInn) {
       return new Promise((resolve, reject) => {
-        axios
-          .post("https://itillect.ru/bcard-ajax/", {
+        this._vm.$api
+          .post("/", {
             action: "bcard:company:search",
             inn: companyInn,
           })
           .then((response) => {
-            console.log(response.data);
             if (response.data.result === "error")
               throw new Error(response.data.data.message);
             if (!response.data.data.company.suggestions?.length)
@@ -203,24 +243,19 @@ export default new Vuex.Store({
           });
       });
     },
-    getOppositeCompanyById({ commit }, oppositeCompanyId) {
+    getOppositeCompanyByInn(_, inn) {
       return new Promise((resolve, reject) => {
-        axios
-          .post("https://itillect.ru/bcard-ajax/", {
+        this._vm.$api
+          .post("/", {
             action: "bcard:company:search",
-            inn: oppositeCompanyId,
+            inn: inn,
           })
           .then((response) => {
-            console.log(response.data);
             if (response.data.result === "error")
               throw new Error(response.data.data.message);
             if (!response.data.data.company.suggestions?.length)
               throw new Error("Что-то пошло не так");
-            commit(
-              "SET_OPPOSITE_COMPANY",
-              response.data.data.company.suggestions[0]
-            );
-            resolve();
+            resolve(response.data.data.company.suggestions[0]);
           })
           .catch((e) => {
             reject(e);
@@ -228,36 +263,48 @@ export default new Vuex.Store({
       });
     },
     getBankByBik({ commit }, companyBik) {
-      axios
-        .post("https://itillect.ru/bcard-ajax/", {
+      this._vm.$api
+        .post("/", {
           action: "bcard:bank:bik",
           bik: companyBik,
         })
         .then((response) => {
-          commit("SET_CLIENT_BANK", response);
+          commit("SET_CLIENT_BANK", response.data.data.bank.suggestions[0]);
         });
     },
-    getOppositeBankByBik({ commit }, companyBik) {
-      axios
-        .post("https://itillect.ru/bcard-ajax/", {
-          action: "bcard:bank:bik",
-          bik: companyBik,
-        })
-        .then((response) => {
-          commit("SET_OPPOSITE_BANK", response);
-        });
+    getOppositeBankByBik(_, bik) {
+      return new Promise((resolve, reject) => {
+        this._vm.$api
+          .post("/", {
+            action: "bcard:bank:bik",
+            bik: bik,
+          })
+          .then((response) => {
+            resolve(response.data.data.bank.suggestions[0]);
+          })
+          .catch((e) => {
+            reject(e);
+          });
+      });
     },
     getPdf(_, hash) {
       return new Promise((resolve, reject) => {
-        axios
-          .post("https://itillect.ru/bcard-ajax/", {
-            action: "get-bcard-pdf",
-            hash: hash,
-            responseType: "blob",
-          })
+        this._vm.$api
+          .get(`/?action=get-bcard-pdf&hash=${hash}`)
           .then(() => {
             window.location = "https://itillect.ru/bcard-load/" + hash + "/";
-
+            resolve();
+          })
+          .catch(() => reject());
+      });
+    },
+    getWord(_, hash) {
+      return new Promise((resolve, reject) => {
+        this._vm.$api
+          .get(`/?action=get-bcard-word&hash=${hash}`)
+          .then(() => {
+            window.location =
+              "https://itillect.ru/bcard-load/" + hash + "/word/";
             resolve();
           })
           .catch(() => reject());

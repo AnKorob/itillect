@@ -22,27 +22,37 @@
     <div class="settings-form">
       <el-form class="settings-form-entity" v-if="isCompany">
         <el-form-item class="settings-form-field" label="ИНН">
-          <el-input
-            placeholder="Пример: 7723615168"
+          <el-autocomplete
             v-model="oppositeInn"
             type="number"
-            @change="getOppositeCompany"
+            :fetch-suggestions="searchInn"
+            :trigger-on-focus="false"
+            placeholder="Пример: 7723615168"
+            @select="onSelectInn"
           />
+          <el-tag v-if="innTag" closable @close="onCloseInnTag">
+            {{ innTag }}
+          </el-tag>
         </el-form-item>
         <el-form-item class="settings-form-field" label="БИК">
-          <el-input
-            placeholder="Пример: 044525593"
+          <el-autocomplete
             v-model="oppositeBik"
             type="number"
-            @input="getOppositeBank"
+            :fetch-suggestions="searchBik"
+            :trigger-on-focus="false"
+            placeholder="Пример: 044525593"
+            @select="onSelectBik"
           />
+          <el-tag v-if="bikTag" closable @close="onCloseBikTag">
+            {{ bikTag }}
+          </el-tag>
         </el-form-item>
         <el-form-item class="settings-form-field" label="Р/с">
           <el-input
             placeholder="Пример: 40702810000000152259"
             v-model="oppositeBankAccount"
             type="number"
-            @input="getOppositeAccount"
+            @input="setOppositeAccount"
           />
         </el-form-item>
       </el-form>
@@ -55,11 +65,25 @@
           </el-input>
         </el-form-item>
         <el-form-item class="settings-form-field" label="Серия и номер">
-          <el-input placeholder="Пример: 6666 000001" v-model="passport.number">
+          <el-input
+            v-model="passport.number"
+            placeholder="Пример: 6666 000001"
+            type="number"
+          >
           </el-input>
         </el-form-item>
         <el-form-item class="settings-form-field" label="Дата выдачи">
-          <el-input placeholder="10.11.2012" v-model="passport.date"></el-input>
+          <el-date-picker
+            v-model="passport.date"
+            type="date"
+            format="dd.MM.yyyy"
+            value-format="dd.MM.yyyy"
+            placeholder="Выберите дату"
+            :pickerOptions="{
+              firstDayOfWeek: 1,
+            }"
+          >
+          </el-date-picker>
         </el-form-item>
         <el-form-item class="settings-form-field" label="Кем выдан">
           <el-input
@@ -78,28 +102,25 @@
       </el-form>
     </div>
     <div class="settings-comment">
-      * Мы не сохраняем данные контрагентов. После перезагрузки страниц, данные
-      о контрагентах обнуляться.
+      * Мы не сохраняем данные контрагентов. После перезагрузки страницы, данные
+      о контрагентах обнулятся.
     </div>
   </div>
 </template>
-<!--/^\d{3}[-]\d{3}$.test(person.idPassport) рега на код подразделения-->
-<!--/^\d{4}[ ]\d{6}$.test(person.passport) серия номер паспорта-->
+
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 export default {
   name: "RequisitesSettings",
   components: {},
-  props: {
-    value: Boolean,
-    oppositeAccount: String,
-  },
   data: () => ({
     isCompany: true,
     isCustomer: true,
     oppositeBik: "",
     oppositeInn: "",
     oppositeBankAccount: "",
+    innTag: "",
+    bikTag: "",
     passport: {
       name: "",
       number: "",
@@ -109,45 +130,65 @@ export default {
       type: "PERSON",
     },
   }),
-  mounted() {
-    this.isCustomer = this.value;
-  },
   computed: {
     ...mapState(["oppositeCompany", "oppositeBank", "clientCompany"]),
   },
-  updated() {
-    this.$emit("passport", this.passport);
+  watch: {
+    passport: {
+      handler: function (p) {
+        this.$emit("update-passport", p);
+      },
+      deep: true,
+    },
   },
   methods: {
     ...mapActions({
-      getOppositeCompanyById: "getOppositeCompanyById",
+      getOppositeCompanyByInn: "getOppositeCompanyByInn",
       getOppositeBankByBik: "getOppositeBankByBik",
     }),
-    getOppositeBank() {
-      if (/^\d{9}$/.test(this.oppositeBik))
-        this.getOppositeBankByBik(this.oppositeBik);
-    },
-    getOppositeCompany() {
-      if (/^\d{10,12}$/.test(this.oppositeInn))
-        this.getOppositeCompanyById(this.oppositeInn)
-          .then(() => {
-            this.companyInnComputed = "";
-          })
-          .catch((e) => {
-            this.$message({
-              message: e,
-              type: "error",
-            });
-          });
-    },
+    ...mapMutations({
+      setOppositeBankAccount: "SET_OPPOSITE_BANK_ACCOUNT",
+      setOppositeCompany: "SET_OPPOSITE_COMPANY",
+      clearOpposite: "CLEAR_OPPOSITE_COMPANY",
+      clearOppositeBank: "CLEAR_OPPOSITE_BANK",
+      setOppositeBank: "SET_OPPOSITE_BANK",
+    }),
     reverse() {
       this.$emit("reverse", this.isCustomer);
     },
     findAgent() {
       this.$emit("find-agent", this.isCompany);
     },
-    getOppositeAccount() {
-      this.$emit("opposite-account", this.oppositeBankAccount);
+    setOppositeAccount() {
+      this.setOppositeBankAccount(this.oppositeBankAccount);
+    },
+    onSelectInn(company) {
+      this.setOppositeCompany(company.data);
+      this.innTag = company.value;
+    },
+    searchInn(inn, cb) {
+      if (!/^\d{10,12}$/.test(inn)) return cb([]);
+      this.getOppositeCompanyByInn(inn).then((response) => {
+        cb([{ value: response.value, data: response }]);
+      });
+    },
+    onCloseInnTag() {
+      this.innTag = "";
+      this.clearOpposite();
+    },
+    onSelectBik(company) {
+      this.setOppositeBank(company.data);
+      this.bikTag = company.value;
+    },
+    searchBik(bik, cb) {
+      if (!/^\d{9}$/.test(bik)) return cb([]);
+      this.getOppositeBankByBik(bik).then((response) => {
+        cb([{ value: response.value, data: response }]);
+      });
+    },
+    onCloseBikTag() {
+      this.bikTag = "";
+      this.clearOppositeBank();
     },
   },
 };
@@ -160,7 +201,7 @@ export default {
   padding-left: 32px;
   flex-shrink: 0;
 
-  & > * {
+  & > div {
     margin-top: 30px;
   }
 
@@ -211,16 +252,18 @@ export default {
       line-height: 30px;
     }
   }
-}
 
-@media (max-width: 770px) {
-  .settings {
-    width: 300px;
-    padding-left: 0;
-    border-top: 1px solid #000;
-    &-comment {
-      margin-bottom: 12px;
-    }
+  .el-input,
+  .el-autocomplete,
+  .el-tag {
+    width: 100%;
+  }
+
+  .el-tag {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
   }
 }
 </style>

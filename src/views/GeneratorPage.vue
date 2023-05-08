@@ -29,23 +29,25 @@ export default {
 .generator-page {
   width: 100%;
   margin-top: 48px;
-}
-.generator-page-leave {
-  transform: translateX(100%);
-  &-to {
-    transform: translateX(-100%);
-    opacity: 0;
+
+  &-leave {
+    transform: translateX(100%);
+    &-to {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    &-active {
+      position: absolute;
+      transition: all 0.3s ease-out;
+    }
   }
-  &-active {
-    position: absolute;
-    transition: all 0.3s ease-out;
-  }
-}
-.generator-page-enter {
-  transform: translateX(100%);
-  &-active {
-    position: absolute;
-    transition: all 0.3s ease-in;
+
+  &-enter {
+    transform: translateX(100%);
+    &-active {
+      position: absolute;
+      transition: all 0.3s ease-in;
+    }
   }
 }
 </style>

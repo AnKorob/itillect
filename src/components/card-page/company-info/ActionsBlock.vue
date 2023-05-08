@@ -1,13 +1,13 @@
 <template>
   <div class="action">
     <el-button class="action-btn" plain @click="downloadPdf">PDF</el-button>
-    <el-button class="action-btn" plain>DOCX</el-button>
-    <el-button class="action-btn" plain @click="openEmail">
+    <el-button class="action-btn" plain @click="downloadWord">DOCX</el-button>
+    <el-button class="action-btn" plain @click="$emit('open-email-block')">
       Отправить на email
     </el-button>
-    <el-button class="action-btn" plain @click="$flashMessage(getMessage)"
-      >Получить ссылку</el-button
-    >
+    <el-button class="action-btn" plain @click="$flashMessage(currentLink)">
+      Получить ссылку
+    </el-button>
   </div>
 </template>
 <script>
@@ -16,17 +16,20 @@ import { mapActions } from "vuex";
 export default {
   name: "ActionsBlock",
   computed: {
-    getMessage() {
+    currentLink() {
       return window.location.href;
     },
   },
   methods: {
-    ...mapActions(["getPdf"]),
+    ...mapActions(["getPdf", "getWord"]),
     openEmail() {
       this.$emit("open");
     },
     downloadPdf() {
       this.getPdf(this.$route.params.hash);
+    },
+    downloadWord() {
+      this.getWord(this.$route.params.hash);
     },
   },
 };
@@ -35,11 +38,12 @@ export default {
 .action {
   display: flex;
   flex: 1;
-  &-btn {
-    padding: 0 24px !important;
+  justify-content: flex-end;
+
+  & > &-btn {
+    display: flex;
+    align-items: center;
     height: 32px;
-    float: left;
-    margin-bottom: 10px !important;
     &:first-of-type {
       margin-left: 10px;
     }

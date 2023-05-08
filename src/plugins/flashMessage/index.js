@@ -3,6 +3,7 @@ import Vue from "vue";
 const flashMessage = {
   install(Vue) {
     Vue.prototype.$flashMessage = function (message = "") {
+      this.$copy(message, false);
       const messageDiv = document.createElement("div");
       messageDiv.innerHTML = `
         <div class ="flash-message-header">Ссылка скопирована в буфер</div>
