@@ -33,21 +33,6 @@
           </el-col>
         </el-row>
       </template>
-      <!-- <template v-if="generator">
-        <el-row
-          v-if="field.value"
-          class="card-generator-info-row"
-          :gutter="40"
-          :key="field.key"
-        >
-          <el-col class="card-generator-info-row-option" :span="6">
-            {{ field.label }}
-          </el-col>
-          <el-col class="card-generator-info-row-value" :span="18">
-            {{ field.value }}
-          </el-col>
-        </el-row>
-      </template> -->
     </div>
   </div>
 </template>
