@@ -4,7 +4,7 @@
     <div class="settings-sides">
       <div class="settings-sides-one">
         <div class="settings-sides-one-header">
-          {{ this.searchCompany.info[1].value }}
+          {{ this.clientCompany.short_name }}
         </div>
         <el-radio-group v-model="isCustomer" @change="reverse">
           <el-radio-button :label="true">Исполнитель</el-radio-button>
@@ -26,9 +26,6 @@
             placeholder="Пример: 7723615168"
             v-model="oppositeInn"
             type="number"
-            @focus="oppositeInn = ''"
-            minlength="10"
-            maxlength="12"
             @change="getOppositeCompany"
           />
         </el-form-item>
@@ -37,9 +34,6 @@
             placeholder="Пример: 044525593"
             v-model="oppositeBik"
             type="number"
-            minlength="9"
-            maxlength="9"
-            @focus="oppositeBik = ''"
             @input="getOppositeBank"
           />
         </el-form-item>
@@ -48,10 +42,7 @@
             placeholder="Пример: 40702810000000152259"
             v-model="oppositeBankAccount"
             type="number"
-            minlength="20"
-            maxlength="20"
             @input="getOppositeAccount"
-            @focus="oppositeBankAccount = ''"
           />
         </el-form-item>
       </el-form>
@@ -60,13 +51,12 @@
           <el-input
             placeholder="Пример: Иванов Иван Иванович"
             v-model="passport.name"
-          ></el-input>
+          >
+          </el-input>
         </el-form-item>
         <el-form-item class="settings-form-field" label="Серия и номер">
-          <el-input
-            placeholder="Пример: 6666 000001"
-            v-model="passport.number"
-          ></el-input>
+          <el-input placeholder="Пример: 6666 000001" v-model="passport.number">
+          </el-input>
         </el-form-item>
         <el-form-item class="settings-form-field" label="Дата выдачи">
           <el-input placeholder="10.11.2012" v-model="passport.date"></el-input>
@@ -75,13 +65,15 @@
           <el-input
             placeholder="Пример: Отделом ОУФМС России по гор.Москве"
             v-model="passport.authority"
-          ></el-input>
+          >
+          </el-input>
         </el-form-item>
         <el-form-item class="settings-form-field" label="Код подразделения">
           <el-input
             placeholder="Пример: 100-500"
             v-model="passport.subdivision"
-          ></el-input>
+          >
+          </el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -114,13 +106,14 @@ export default {
       authority: "",
       date: "",
       subdivision: "",
+      type: "PERSON",
     },
   }),
   mounted() {
     this.isCustomer = this.value;
   },
   computed: {
-    ...mapState(["oppositeCompany", "oppositeBank", "searchCompany"]),
+    ...mapState(["oppositeCompany", "oppositeBank", "clientCompany"]),
   },
   updated() {
     this.$emit("passport", this.passport);
@@ -136,7 +129,16 @@ export default {
     },
     getOppositeCompany() {
       if (/^\d{10,12}$/.test(this.oppositeInn))
-        this.getOppositeCompanyById(this.oppositeInn);
+        this.getOppositeCompanyById(this.oppositeInn)
+          .then(() => {
+            this.companyInnComputed = "";
+          })
+          .catch((e) => {
+            this.$message({
+              message: e,
+              type: "error",
+            });
+          });
     },
     reverse() {
       this.$emit("reverse", this.isCustomer);
@@ -147,9 +149,6 @@ export default {
     getOppositeAccount() {
       this.$emit("opposite-account", this.oppositeBankAccount);
     },
-    // checkInn() {
-    //   this.isValid = this.companyInn && /^\d{10,12}$/.test(this.companyInn);
-    // },
   },
 };
 </script>

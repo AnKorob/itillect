@@ -5,7 +5,6 @@
     element-loading-text="Загрузка данных..."
     element-loading-background="rgb(247 248 249 / 80%)"
   >
-    <button @click="$emit('toggle')">back</button>
     <h3 class="card-generator-title">Введите ИНН организации</h3>
     <div class="card-generator-finder">
       <el-input
@@ -18,25 +17,16 @@
         type="primary"
         class="card-generator-finder-search"
         :disabled="!isValid"
-        @click="getCompanyByInn"
+        @click="getCompanyByINN"
       >
         Найти
       </el-button>
     </div>
-    <div class="card-generator-info" v-if="searchCompany.info.length">
-      <el-row
-        class="card-generator-info-row"
-        v-for="field in searchCompany.info"
-        :key="field.key"
-        :gutter="40"
-      >
-        <el-col class="card-generator-info-row-option" :span="6">
-          {{ field.label }}
-        </el-col>
-        <el-col class="card-generator-info-row-value" :span="18">
-          {{ field.value }}
-        </el-col>
-      </el-row>
+    <div
+      class="card-generator-info"
+      v-if="!isNewClient && getClientCompanyTableRows.length"
+    >
+      <InfoBlock :generator="true" />
       <el-button
         type="primary"
         class="card-generator-info-action"
@@ -53,17 +43,20 @@
   </div>
 </template>
 <script>
-import { mapActions, mapState, mapMutations } from "vuex";
-
+import { mapActions, mapState, mapGetters, mapMutations } from "vuex";
+import InfoBlock from "@/components/InfoBlock.vue";
 export default {
   name: "CardGenerator",
   data: () => ({
     companyInn: "",
     isValid: false,
     isLoading: false,
+    isNewClient: true,
   }),
+  components: { InfoBlock },
   computed: {
-    ...mapState(["searchCompany"]),
+    ...mapState(["clientCompany"]),
+    ...mapGetters(["getClientCompanyTableRows"]),
     companyInnComputed: {
       get() {
         return this.companyInn;
@@ -74,23 +67,24 @@ export default {
       },
     },
   },
+
   methods: {
     ...mapActions({
-      getCompanyById: "getCompanyById",
+      getCompanyByInn: "getCompanyByInn",
     }),
     ...mapMutations({
       setCompanyTab: "SET_COMPANY_TAB",
     }),
     createCard() {
       this.setCompanyTab({
-        title: this.searchCompany.title,
-        hash: this.searchCompany.hash,
+        title: this.clientCompany.short_name,
+        hash: this.clientCompany.hash,
       });
-      this.$router.push(`/bcard/${this.searchCompany.hash}`);
+      this.$router.push(`/bcard/${this.clientCompany.hash}`);
     },
-    getCompanyByInn() {
+    getCompanyByINN() {
       this.isLoading = true;
-      this.getCompanyById(this.companyInn)
+      this.getCompanyByInn(this.companyInn)
         .then(() => {
           this.companyInnComputed = "";
         })
@@ -102,6 +96,7 @@ export default {
         })
         .finally(() => {
           this.isLoading = false;
+          this.isNewClient = false;
         });
     },
   },
@@ -151,22 +146,6 @@ export default {
       width: 300px;
       font-size: 16px;
       font-weight: 600;
-    }
-
-    &-row {
-      font-size: 18px;
-      font-weight: 300;
-      margin-bottom: 16px;
-      height: auto;
-      display: flex;
-
-      &-option {
-        display: flex;
-        font-weight: 600;
-      }
-      &-value {
-        display: flex;
-      }
     }
   }
 }

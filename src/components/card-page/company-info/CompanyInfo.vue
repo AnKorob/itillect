@@ -2,43 +2,20 @@
   <div class="company-card">
     <div class="company-card-header">
       <div class="company-card-header-name">
-        {{ searchCompany.info[1].value }}
+        {{ clientCompany.short_name }}
       </div>
       <div class="company-card-header-button">
-        <el-button class="type" plain>PDF</el-button>
-        <el-button class="type" plain>DOCX</el-button>
-        <el-button class="type" plain @click="openEmail">
-          Отправить на email
-        </el-button>
-        <el-button class="type" plain @click="$flashMessage(getMessage)"
-          >Получить ссылку</el-button
-        >
+        <ActionsBlock @open="openEmail" />
       </div>
     </div>
     <div class="company-card-info">
-      <el-row
-        class="company-card-info-block"
-        v-for="field in searchCompany.info"
-        :key="field.key"
-      >
-        <el-col :span="6" class="company-card-info-block-option">
-          {{ field.label }}
-        </el-col>
-        <el-col :span="14" class="company-card-info-block-value">
-          {{ field.value }}
-        </el-col>
-        <el-col :span="4">
-          <el-button type="primary" class="copy" @click="copyText(field.value)">
-            Копировать
-          </el-button>
-        </el-col>
-      </el-row>
+      <InfoBlock :generator="false" />
       <div class="company-card-info-header">Банковские реквизиты</div>
       <el-row class="company-card-info-block">
         <el-col :span="6" class="company-card-info-block-option"> СЧЕТ </el-col>
         <el-col :span="14" class="company-card-info-block-value">
           <el-input
-            placeholder="Please input"
+            placeholder="Введите номер банковского счета"
             v-model="bankAccount"
             type="number"
             @change="setAccount"
@@ -57,7 +34,7 @@
         <el-col :span="6" class="company-card-info-block-option"> БИК </el-col>
         <el-col :span="14" class="company-card-info-block-value">
           <el-input
-            placeholder="Please input"
+            placeholder="Введите БИК"
             v-model="companyBik"
             type="number"
             minlength="9"
@@ -74,7 +51,7 @@
       </el-row>
       <el-row
         class="company-card-info-block"
-        v-for="field in companyBank"
+        v-for="field in getClientBankRows"
         :key="field.key"
       >
         <el-col :span="6" class="company-card-info-block-option">
@@ -93,24 +70,22 @@
   </div>
 </template>
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapGetters, mapActions } from "vuex";
+import ActionsBlock from "@/components/card-page/company-info/ActionsBlock.vue";
+import InfoBlock from "@/components/InfoBlock.vue";
 export default {
-  name: "CompanyCard",
+  name: "CompanyInfo",
   data: () => ({
     companyBik: "",
     bankAccount: "",
-    message: "",
   }),
+  components: {
+    ActionsBlock,
+    InfoBlock,
+  },
   props: {
     value: String,
   },
-  // directives: {
-  //   copy: {
-  //     bind: function (el) {
-  //       el.copy();
-  //     },
-  //   },
-  // },
   methods: {
     ...mapActions({
       getBankByBik: "getBankByBik",
@@ -133,14 +108,14 @@ export default {
     },
   },
   computed: {
-    ...mapState(["companyBank", "searchCompany", "companiesTabs"]),
+    ...mapState(["clientBank", "clientCompany", "companiesTabs"]),
+    ...mapGetters(["getClientCompanyTableRows", "getClientBankRows"]),
     getMessage() {
       return window.location.href;
     },
   },
   mounted() {
     this.bankAccount = this.value;
-    console.log(this.companiesTabs);
   },
 };
 </script>
@@ -261,16 +236,6 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.type {
-  padding: 0 24px !important;
-  height: 32px;
-  float: left;
-  margin-bottom: 10px !important;
-  &:first-of-type {
-    margin-left: 10px;
-  }
-}
-
 @media (max-width: 770px) {
   .company-card {
     &-header {

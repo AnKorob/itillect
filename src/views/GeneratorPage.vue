@@ -1,6 +1,6 @@
 <template>
-  <div class="page-block">
-    <Transition name="page-block">
+  <div class="generator-page">
+    <Transition name="generator-page">
       <component :is="component" @toggle="showIntro = !showIntro" />
     </Transition>
   </div>
@@ -10,7 +10,7 @@ import CardGenerator from "@/components/generator-page/CardGenerator.vue";
 import CardIntro from "@/components/generator-page/CardIntro.vue";
 
 export default {
-  name: "PageBlock",
+  name: "GeneratorPage",
   components: {
     CardGenerator,
     CardIntro,
@@ -26,11 +26,11 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.page-block {
+.generator-page {
   width: 100%;
   margin-top: 48px;
 }
-.page-block-leave {
+.generator-page-leave {
   transform: translateX(100%);
   &-to {
     transform: translateX(-100%);
@@ -41,7 +41,7 @@ export default {
     transition: all 0.3s ease-out;
   }
 }
-.page-block-enter {
+.generator-page-enter {
   transform: translateX(100%);
   &-active {
     position: absolute;

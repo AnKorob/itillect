@@ -6,7 +6,6 @@ import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 import "@/assets/main.css";
 import "@/plugins/index";
-import "@/directives/copy";
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
 

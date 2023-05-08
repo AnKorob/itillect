@@ -4,13 +4,16 @@
       <div class="page-header-content-logo">
         <span v-html="logo" @click="goStart" />
       </div>
-      <div class="page-header-content-link">Счета и акты онлайн</div>
+      <div class="page-header-content-link">
+        <a class="side-link" target="_blank" href="https://doces.ru/">
+          Счета и акты онлайн
+        </a>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
 import logo from "@/assets/logo";
 
 export default {
@@ -20,9 +23,7 @@ export default {
       logo,
     };
   },
-  computed: {
-    ...mapState(["searchCompany"]),
-  },
+
   methods: {
     goStart() {
       this.$router.push({ name: "home" });
@@ -52,21 +53,19 @@ export default {
       height: 36px;
       width: 36px;
       cursor: pointer;
-
-      & > img {
-        height: 36px;
-        width: 36px;
-      }
     }
 
     &-link {
       display: flex;
       height: 100%;
       width: auto;
-      text-decoration: dashed underline;
       cursor: pointer;
       align-items: center;
       font-weight: 600;
+      & > .side-link {
+        color: black;
+        text-decoration: dashed underline;
+      }
     }
   }
 }

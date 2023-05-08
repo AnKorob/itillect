@@ -17,7 +17,7 @@
     <el-tabs
       v-model="tabHash"
       v-if="companiesTabs.length"
-      @tab-click="$router.push(`/bcard/${tabHash}`)"
+      @tab-click="changeRoute"
     >
       <el-tab-pane
         v-for="tab in companiesTabs"
@@ -36,18 +36,26 @@ export default {
     tabHash: "",
   }),
   computed: {
-    ...mapState(["searchCompany", "companiesTabs"]),
+    ...mapState(["companiesTabs"]),
   },
   watch: {
-    companiesTabs(tabs) {
-      // при добавлении автоматом выбираем последний
-      if (this.$route.params.hash) this.tabHash = tabs.at(-1)?.hash;
+    companiesTabs() {
+      this.tabHash = this.$route.params.hash;
+    },
+    "$route.params": {
+      handler: function () {
+        if (!this.$route.params?.hash) this.tabHash = "";
+      },
+      deep: true,
     },
   },
   methods: {
     ...mapMutations({
       setCompanyTabs: "SET_COMPANY_TABS",
     }),
+    changeRoute() {
+      this.$router.push(`/bcard/${this.tabHash}`);
+    },
   },
   mounted() {
     this.setCompanyTabs();
