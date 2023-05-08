@@ -4,13 +4,22 @@
       <template>
         <el-row
           class="company-card-info-block"
+          :class="{ 'card-generator-info-row': generator }"
           :key="field.key"
           v-if="field.value"
         >
-          <el-col :span="6" class="company-card-info-block-option">
+          <el-col
+            :span="6"
+            class="company-card-info-block-option"
+            :class="{ 'card-generator-info-row-option': generator }"
+          >
             {{ field.label }}
           </el-col>
-          <el-col :span="14" class="company-card-info-block-value">
+          <el-col
+            :span="14"
+            class="company-card-info-block-value"
+            :class="{ 'card-generator-info-row-value': generator }"
+          >
             {{ field.value }}
           </el-col>
           <el-col :span="4" v-if="!generator">
@@ -24,6 +33,21 @@
           </el-col>
         </el-row>
       </template>
+      <!-- <template v-if="generator">
+        <el-row
+          v-if="field.value"
+          class="card-generator-info-row"
+          :gutter="40"
+          :key="field.key"
+        >
+          <el-col class="card-generator-info-row-option" :span="6">
+            {{ field.label }}
+          </el-col>
+          <el-col class="card-generator-info-row-value" :span="18">
+            {{ field.value }}
+          </el-col>
+        </el-row>
+      </template> -->
     </div>
   </div>
 </template>
@@ -46,6 +70,23 @@ export default {
 };
 </script>
 <style lang="scss">
+.card-generator-info {
+  &-row {
+    font-size: 18px;
+    font-weight: 300;
+    margin-bottom: 16px;
+    height: auto;
+    display: flex;
+
+    &-option {
+      display: flex;
+      font-weight: 600;
+    }
+    &-value {
+      display: flex;
+    }
+  }
+}
 .company-card-info-block {
   display: flex;
   width: 100%;
